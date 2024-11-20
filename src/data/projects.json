@@ -1,0 +1,30 @@
+[
+    {
+      "name": "Project Alpha",
+      "description": "A revolutionary AI-powered keyboard that adapts to your typing style",
+      "image": "/images/project-alpha.jpg",
+      "techStack": ["React", "TensorFlow.js", "WebUSB API"],
+      "githubLink": "https://github.com/duo-keyboard-koalition/project-alpha"
+    },
+    {
+      "name": "Project Beta",
+      "description": "Blockchain-based typing competition platform with NFT rewards",
+      "image": "https://media.discordapp.net/attachments/1304184438879555594/1306133980420247562/image.png?ex=673eca0f&is=673d788f&hm=d53d8ba7e7db14bce85ea469a7ee25f68667bd26fec986b144b611be93c7a992&=&format=webp&quality=lossless&width=875&height=875",
+      "techStack": ["Solidity", "Next.js", "Ethereum"],
+      "githubLink": "https://github.com/duo-keyboard-koalition/project-beta"
+    },
+    {
+      "name": "Project Gamma",
+      "description": "Open-source ergonomic keyboard design with modular components",
+      "image": "/images/project-gamma.jpg",
+      "techStack": ["CAD", "3D Printing", "Arduino"],
+      "githubLink": "https://github.com/duo-keyboard-koalition/project-gamma"
+    },
+    {
+      "name": "Project Delta",
+      "description": "Real-time collaborative coding environment with integrated keyboard shortcuts",
+      "image": "/images/project-delta.jpg",
+      "techStack": ["WebRTC", "Monaco Editor", "Socket.io"],
+      "githubLink": "https://github.com/duo-keyboard-koalition/project-delta"
+    }
+  ]
