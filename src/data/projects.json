@@ -11,7 +11,7 @@
       "name": "ALI",
       "description": "AI-powered mobile app that not only helps detect early signs of Alzheimer's through natural speech analysis but also provides elderly companionship, reducing the emotional and cognitive isolation that many experience.",
       "image": "/images/ALI.png",
-      "techStack": ["Solidity", "Next.js", "Ethereum"],
+      "techStack": ["React Native", "Wave2Vec", "PyTorch"],
       "githubLink": "https://github.com/Duo-Keyboard-Koalition/Hack49-2024-Alzheimers-EDS",
       "doraLink": "https://dorahacks.io/buidl/17822/"
     },

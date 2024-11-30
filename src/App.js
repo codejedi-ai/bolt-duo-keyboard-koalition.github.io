@@ -16,9 +16,9 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen flex flex-col bg-black text-white">
         <Header />
-        <main className="container mx-auto px-4 py-12">
+        <main className="flex-grow container mx-auto px-4 py-12">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
