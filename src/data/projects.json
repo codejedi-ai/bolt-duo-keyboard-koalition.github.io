@@ -1,30 +1,34 @@
 [
     {
-      "name": "Project Alpha",
-      "description": "A revolutionary AI-powered keyboard that adapts to your typing style",
-      "image": "/images/project-alpha.jpg",
-      "techStack": ["React", "TensorFlow.js", "WebUSB API"],
-      "githubLink": "https://github.com/duo-keyboard-koalition/project-alpha"
+      "name": "TrashCam",
+      "description": "Simplifies waste sorting through real-time object recognition, turning trash disposal into a fun, interactive experience",
+      "image": "/images/trashcam.png",
+      "techStack": ["React", "Coco-ssd", "Google Vision"],
+      "githubLink": "https://github.com/YehyunLee/Hack-the-Valley-9",
+      "devpostLink": "https://devpost.com/software/trashcam-rwtjqn"
     },
     {
-      "name": "Project Beta",
-      "description": "Blockchain-based typing competition platform with NFT rewards",
-      "image": "https://media.discordapp.net/attachments/1304184438879555594/1306133980420247562/image.png?ex=673eca0f&is=673d788f&hm=d53d8ba7e7db14bce85ea469a7ee25f68667bd26fec986b144b611be93c7a992&=&format=webp&quality=lossless&width=875&height=875",
+      "name": "ALI",
+      "description": "AI-powered mobile app that not only helps detect early signs of Alzheimer's through natural speech analysis but also provides elderly companionship, reducing the emotional and cognitive isolation that many experience.",
+      "image": "/images/ALI.png",
       "techStack": ["Solidity", "Next.js", "Ethereum"],
-      "githubLink": "https://github.com/duo-keyboard-koalition/project-beta"
+      "githubLink": "https://github.com/Duo-Keyboard-Koalition/Hack49-2024-Alzheimers-EDS",
+      "doraLink": "https://dorahacks.io/buidl/17822/"
     },
     {
-      "name": "Project Gamma",
-      "description": "Open-source ergonomic keyboard design with modular components",
-      "image": "/images/project-gamma.jpg",
-      "techStack": ["CAD", "3D Printing", "Arduino"],
-      "githubLink": "https://github.com/duo-keyboard-koalition/project-gamma"
+      "name": "Magic.Quill",
+      "description": "Enter magic.quill—not just a notetaker, but your all-in-one academic ally. magic.quill transcribes lectures in real-time, converting spoken words, slides, diagrams, and complex equations into organized, human-readable notes. ",
+      "image": "/images/quil.png",
+      "techStack": ["Next.js", "OCR", "Gemini"],
+      "githubLink": "https://github.com/Duo-Keyboard-Koalition/ctrl-hack-del-2024-magic.quill",
+      "devpostLink": "https://devpost.com/software/magic-quill"
     },
     {
-      "name": "Project Delta",
-      "description": "Real-time collaborative coding environment with integrated keyboard shortcuts",
-      "image": "/images/project-delta.jpg",
-      "techStack": ["WebRTC", "Monaco Editor", "Socket.io"],
-      "githubLink": "https://github.com/duo-keyboard-koalition/project-delta"
+      "name": "EcoFind",
+      "description": "Ecofind is an innovative application designed to facilitate guilt-free 3D printing by providing a solution for the disposal and recycling of 3D printing plastics.",
+      "image": "/images/ecofind.jpg",
+      "techStack": ["AWS", "OpenAI", "Supabase"],
+      "githubLink": "https://github.com/wiledw/EcoFind",
+      "devpostLink": "https://devpost.com/software/ecofind-esvfa7"
     }
   ]
