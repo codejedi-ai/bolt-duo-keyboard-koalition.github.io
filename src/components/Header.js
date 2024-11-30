@@ -26,12 +26,12 @@ function Header() {
             DoraHacks <ExternalLink className="h-4 w-4" />
           </a>
           <a 
-            href="https://vercel.com/duo-keyboard-koalition" 
+            href="https://github.com/orgs/Duo-Keyboard-Koalition/repositories" 
             target="_blank" 
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-white hover:text-primary"
           >
-            Vercel <ExternalLink className="h-4 w-4" />
+            Github <ExternalLink className="h-4 w-4" />
           </a>
         </div>
       </nav>
