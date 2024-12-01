@@ -11,7 +11,7 @@
       "name": "ALI",
       "description": "AI-powered mobile app that not only helps detect early signs of Alzheimer's through natural speech analysis but also provides elderly companionship, reducing the emotional and cognitive isolation that many experience.",
       "image": "/images/ALI.png",
-      "techStack": ["React Native", "Wave2Vec", "PyTorch"],
+      "techStack": ["React Native", "FastAPI", "S3", "Wave2Vec", "PyTorch", "Elevenlabs", "Gemini", "Huggingface/Kaggle"],
       "githubLink": "https://github.com/Duo-Keyboard-Koalition/Hack49-2024-Alzheimers-EDS",
       "doraLink": "https://dorahacks.io/buidl/17822/"
     },
@@ -19,7 +19,7 @@
       "name": "Magic.Quill",
       "description": "Enter magic.quill—not just a notetaker, but your all-in-one academic ally. magic.quill transcribes lectures in real-time, converting spoken words, slides, diagrams, and complex equations into organized, human-readable notes. ",
       "image": "/images/quil.png",
-      "techStack": ["Next.js", "OCR", "Gemini"],
+      "techStack": ["Next.js", "TailwindCSS", "OCR", "Gemini"],
       "githubLink": "https://github.com/Duo-Keyboard-Koalition/ctrl-hack-del-2024-magic.quill",
       "devpostLink": "https://devpost.com/software/magic-quill"
     },
