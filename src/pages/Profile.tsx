@@ -1,5 +1,5 @@
 import { useUser } from '@clerk/clerk-react';
-import { User, Mail, Calendar, Edit } from 'lucide-react';
+import { Mail, Calendar, Edit } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
@@ -79,7 +79,7 @@ function Profile(): JSX.Element {
                       Member Since
                     </label>
                     <p className="text-white bg-gray-800 p-3 rounded-md">
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                     </p>
                   </div>
                 </div>

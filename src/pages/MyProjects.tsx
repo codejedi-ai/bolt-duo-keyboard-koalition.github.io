@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
-import { Plus, Github, ExternalLink, Edit, Trash2, Code2 } from 'lucide-react';
+import { Plus, Github, ExternalLink, Edit, Trash2, Code2, Trophy } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
@@ -17,7 +16,6 @@ interface UserProject {
 }
 
 function MyProjects(): JSX.Element {
-  const { user } = useUser();
   const [projects, setProjects] = useState<UserProject[]>([
     {
       id: '1',

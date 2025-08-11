@@ -3,7 +3,7 @@ import { Card as MuiCard, CardContent as MuiCardContent } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { cn } from "../../lib/utils"
 
-const StyledCard = styled(MuiCard)(({ theme }) => ({
+const StyledCard = styled(MuiCard)(() => ({
   backgroundColor: '#111827',
   border: '1px solid #374151',
   borderRadius: '8px',
@@ -11,7 +11,7 @@ const StyledCard = styled(MuiCard)(({ theme }) => ({
   color: '#F9FAFB',
 }))
 
-const StyledCardContent = styled(MuiCardContent)(({ theme }) => ({
+const StyledCardContent = styled(MuiCardContent)(() => ({
   padding: '24px',
   '&:last-child': {
     paddingBottom: '24px',

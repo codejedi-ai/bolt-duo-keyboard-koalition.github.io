@@ -1,9 +1,9 @@
 import { forwardRef, ButtonHTMLAttributes } from "react"
-import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material'
+import { Button as MuiButton } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { cn } from "../../lib/utils"
 
-const StyledButton = styled(MuiButton)(({ theme, variant, size }) => ({
+const StyledButton = styled(MuiButton)(() => ({
   textTransform: 'none',
   fontWeight: 500,
   borderRadius: '6px',
@@ -29,14 +29,6 @@ const StyledButton = styled(MuiButton)(({ theme, variant, size }) => ({
       backgroundColor: 'rgba(255, 165, 0, 0.1)',
     },
   },
-  ...(size === 'small' && {
-    padding: '6px 12px',
-    fontSize: '0.875rem',
-  }),
-  ...(size === 'large' && {
-    padding: '12px 32px',
-    fontSize: '1rem',
-  }),
 }))
 
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'size'> {
@@ -84,7 +76,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         variant={getMuiVariant()}
         size={getMuiSize()}
-        color="primary"
         className={cn(className)}
         {...props}
       >

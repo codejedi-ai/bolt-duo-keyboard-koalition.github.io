@@ -22,7 +22,7 @@ function UserDropdown(): JSX.Element {
     };
   }, []);
 
-  if (!user) return null;
+  if (!user) return <div></div>;
 
   return (
     <div className="relative" ref={dropdownRef}>

@@ -71,7 +71,7 @@ function Events(): JSX.Element {
       hours = '00';
     }
     if (modifier === 'PM') {
-      hours = parseInt(hours, 10) + 12;
+      hours = (parseInt(hours, 10) + 12).toString();
     }
     return `${hours}:${minutes}`;
   };
@@ -85,7 +85,7 @@ function Events(): JSX.Element {
         const eventDate = new Date(event.date);
         return eventDate >= today;
       })
-      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(0, 3);
   };
 
@@ -93,7 +93,7 @@ function Events(): JSX.Element {
     setCurrentDate((prev: Date) => {
       const newDate = new Date(prev);
       newDate.setMonth(prev.getMonth() + direction);
-      return newDate;
+      return timeA < timeB ? -1 : timeA > timeB ? 1 : 0;
     });
   };
 
