@@ -38,6 +38,7 @@ function JoinDiscord() {
               />
               <span className="text-xs text-gray-500">Scan to join</span>
             </div>
+            <Button 
           <Button 
             variant="outline" 
             className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
@@ -49,8 +50,7 @@ function JoinDiscord() {
       </CardContent>
     </Card>
   )
+  )
 }
 
 export default JoinDiscord
-  )
-}
