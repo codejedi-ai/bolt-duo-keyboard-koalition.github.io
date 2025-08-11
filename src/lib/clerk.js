@@ -12,9 +12,6 @@ export const clerk = new Clerk(clerkPubKey);
 export const initializeClerk = async () => {
   try {
     await clerk.load({
-      signInUrl: 'https://regular-fox-83.accounts.dev/sign-in',
-      signUpUrl: 'https://regular-fox-83.accounts.dev/sign-up',
-      userProfileUrl: 'https://regular-fox-83.accounts.dev/user',
       appearance: {
         baseTheme: 'dark',
         variables: {

@@ -27,7 +27,6 @@ function UserButton() {
       
       // Mount the user button
       clerk.mountUserButton(userButtonRef.current, {
-        userProfileUrl: 'https://regular-fox-83.accounts.dev/user',
         appearance: {
           elements: {
             userButtonAvatarBox: 'w-8 h-8',
