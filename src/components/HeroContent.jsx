@@ -26,14 +26,12 @@ function HeroContent() {
           >
             Explore Projects
           </Link>
-          <a
-            href="https://discord.gg/6GaWZAawUc"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/events"
             className="px-8 py-4 text-lg font-semibold border-2 border-primary text-primary rounded-md shadow-md hover:bg-primary/20 transition-all duration-200"
           >
-            Join Discord
-          </a>
+            View Events
+          </Link>
         </div>
       </div>
 

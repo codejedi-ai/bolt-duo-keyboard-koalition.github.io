@@ -27,6 +27,14 @@ function Footer({ handleDiscordJoin }) {
               GitHub
             </a>
             <a 
+              href="https://www.linkedin.com/company/pygmalion-koalition" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-400 hover:text-[#0077B5] text-sm"
+            >
+              LinkedIn
+            </a>
+            <a 
               href="https://dorahacks.io/org/2861" 
               target="_blank" 
               rel="noopener noreferrer" 
