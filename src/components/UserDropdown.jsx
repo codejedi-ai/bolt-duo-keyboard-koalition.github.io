@@ -66,7 +66,10 @@ function UserDropdown() {
             </div>
             
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                window.open('https://regular-fox-83.accounts.dev/user', '_blank');
+                setIsOpen(false);
+              }}
               className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors flex items-center gap-2"
             >
               <User className="w-4 h-4" />
