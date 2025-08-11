@@ -86,15 +86,7 @@ function Auth() {
         <p className="text-gray-400">
           {isLogin ? 'Sign in to your account' : 'Create your account to get started'}
         </p>
-        <div className="mt-4">
-          <button
-            type="button"
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-primary hover:underline text-sm"
-          >
-            {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-          </button>
-        </div>
+
       </div>
       
       {isLogin ? (
