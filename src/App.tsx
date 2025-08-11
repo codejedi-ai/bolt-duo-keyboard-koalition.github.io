@@ -3,6 +3,7 @@ import AuthWrapper from './components/AuthWrapper';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import MyProjects from './pages/MyProjects';
 import Projects from './pages/Projects';
@@ -46,6 +47,7 @@ function App(): JSX.Element {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<HomeRoute />} />
+              <Route path="/about" element={<About />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/events" element={<Events />} />
               <Route path="/events/:date" element={<EventDate />} />

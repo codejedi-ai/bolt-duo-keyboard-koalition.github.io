@@ -23,7 +23,7 @@ function Header(): JSX.Element {
           
           <div className="flex items-center gap-6">
             <SignedOut>
-              <Link to="/" className="text-white hover:text-primary transition-colors">Home</Link>
+              <Link to="/about" className="text-white hover:text-primary transition-colors">About</Link>
             </SignedOut>
             <SignedIn>
               <Link to="/dashboard" className="text-white hover:text-primary transition-colors">Dashboard</Link>
