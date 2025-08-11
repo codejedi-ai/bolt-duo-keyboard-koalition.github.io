@@ -1,31 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'preact/hooks';
 import { Calendar, MapPin, ArrowLeft, Clock, Users } from 'lucide-react';
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
+import eventsData from '../data/events.json';
 
 function EventDate() {
   const { date } = useParams();
-  const [eventsData, setEventsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('/src/data/events.json');
-        const data = await response.json();
-        setEventsData(data);
-      } catch (error) {
-        console.error('Failed to fetch events:', error);
-        setEventsData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
   const events = eventsData.filter(event => event.date === date);
   
   const formatDate = (dateStr) => {
@@ -67,16 +47,6 @@ function EventDate() {
   };
 
   const hourlySchedule = generateHourlySchedule();
-
-  if (loading) {
-    return (
-      <section className="max-w-6xl mx-auto">
-        <div className="flex justify-center items-center h-64">
-          <div className="text-gray-400">Loading events...</div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="max-w-6xl mx-auto">
