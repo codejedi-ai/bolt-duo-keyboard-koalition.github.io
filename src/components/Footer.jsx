@@ -9,7 +9,7 @@ function Footer({ handleDiscordJoin }) {
               alt="DKK Logo"
               className="w-8 h-8 mr-2"
             />
-            <span className="text-gray-400 text-sm">© 2024 Duo Keyboard Koalition</span>
+            <span className="text-gray-400 text-sm">© 2025 Duo Keyboard Koalition</span>
           </div>
           <div className="flex gap-4">
             <button 
