@@ -1,4 +1,3 @@
-import React from 'react';
 import winsData from '../data/wins.json';
 
 function Wins() {

@@ -1,5 +1,3 @@
-import React from 'react';
-
 function Footer({ handleDiscordJoin }) {
   return (
     <footer className="bg-gray-900 py-4">

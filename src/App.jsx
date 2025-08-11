@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 import Header from './components/Header';

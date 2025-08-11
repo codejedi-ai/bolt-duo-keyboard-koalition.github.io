@@ -1,4 +1,3 @@
-import React from 'react'
 import { DiscIcon as DiscordLogo } from 'lucide-react'
 import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"

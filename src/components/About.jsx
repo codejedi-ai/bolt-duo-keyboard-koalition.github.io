@@ -1,5 +1,3 @@
-import React from 'react';
-
 function About() {
   return (
     <section className="max-w-3xl mx-auto">

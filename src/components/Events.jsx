@@ -1,4 +1,3 @@
-import React from 'react';
 import eventsData from '../data/events.json';
 
 function Events() {
