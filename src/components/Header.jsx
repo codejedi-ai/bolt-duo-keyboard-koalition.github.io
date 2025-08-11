@@ -22,7 +22,12 @@ function Header() {
             <Link to="/about" className="text-white hover:text-primary transition-colors">About</Link>
             <Link to="/projects" className="text-white hover:text-primary transition-colors">Projects</Link>
             <Link to="/events" className="text-white hover:text-primary transition-colors">Events</Link>
-            <Link to="/auth" className="text-white hover:text-primary transition-colors">Auth</Link>
+            <Link 
+              to="/auth" 
+              className="px-4 py-2 bg-primary text-black rounded-md hover:bg-primary/90 transition-all duration-200 font-medium"
+            >
+              Login
+            </Link>
           </div>
         </div>
       </nav>

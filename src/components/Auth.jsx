@@ -35,6 +35,9 @@ function Auth() {
           <CardTitle className="text-2xl font-bold text-center text-white">
             {isLogin ? 'Welcome Back' : 'Join the Koalition'}
           </CardTitle>
+          <p className="text-center text-gray-400 text-sm">
+            {isLogin ? 'Sign in to your account' : 'Create your account to get started'}
+          </p>
         </CardHeader>
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
