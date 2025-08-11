@@ -1,4 +1,4 @@
-import { forwardRef } from "preact/compat"
+import { forwardRef } from "react"
 import { cn } from "../../lib/utils"
 
 const Card = forwardRef(({ className, ...props }, ref) => (

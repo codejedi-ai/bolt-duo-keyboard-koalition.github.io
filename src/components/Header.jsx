@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import UserButton from './UserButton';
-import AuthButton from './AuthButton';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 function Header() {
   return (
@@ -24,10 +23,31 @@ function Header() {
             <Link to="/about" className="text-white hover:text-primary transition-colors">About</Link>
             <Link to="/projects" className="text-white hover:text-primary transition-colors">Projects</Link>
             <Link to="/events" className="text-white hover:text-primary transition-colors">Events</Link>
-            <div className="flex items-center">
-              <UserButton />
-              <AuthButton />
-            </div>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="px-4 py-2 bg-primary text-black rounded-md hover:bg-primary/90 transition-all duration-200 font-medium">
+                  Login
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton 
+                appearance={{
+                  baseTheme: 'dark',
+                  variables: {
+                    colorPrimary: '#FFA500',
+                  },
+                  elements: {
+                    avatarBox: "w-8 h-8",
+                    userButtonPopoverCard: "bg-gray-800 border border-gray-700",
+                    userButtonPopoverActions: "bg-gray-800",
+                    userButtonPopoverActionButton: "text-white hover:bg-gray-700",
+                    userButtonPopoverActionButtonText: "text-white",
+                    userButtonPopoverFooter: "bg-gray-800 border-t border-gray-700"
+                  }
+                }}
+              />
+            </SignedIn>
           </div>
         </div>
       </nav>

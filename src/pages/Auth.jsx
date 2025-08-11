@@ -1,5 +1,5 @@
 import { SignIn, SignUp } from '@clerk/clerk-react';
-import { useState } from 'preact/hooks';
+import { useState } from 'react';
 
 function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -34,15 +34,27 @@ function Auth() {
       <div className="flex justify-center">
         {isSignUp ? (
           <SignUp 
-            routing="path"
-            path="/auth"
-            redirectUrl="/"
+            appearance={{
+              baseTheme: 'dark',
+              variables: {
+                colorPrimary: '#FFA500',
+                colorBackground: '#111827',
+                colorInputBackground: '#1F2937',
+                colorInputText: '#FFFFFF',
+              }
+            }}
           />
         ) : (
           <SignIn 
-            routing="path"
-            path="/auth"
-            redirectUrl="/"
+            appearance={{
+              baseTheme: 'dark',
+              variables: {
+                colorPrimary: '#FFA500',
+                colorBackground: '#111827',
+                colorInputBackground: '#1F2937',
+                colorInputText: '#FFFFFF',
+              }
+            }}
           />
         )}
       </div>
