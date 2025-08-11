@@ -1,8 +1,8 @@
 import { useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Calendar, ExternalLink, Clock } from 'lucide-react';
-import { Card, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 import eventsData from '../data/events.json';
 
 function Events() {

@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, MapPin, ArrowLeft, Clock, Users } from 'lucide-react';
-import { Card, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 import eventsData from '../data/events.json';
 
 function EventDate() {
