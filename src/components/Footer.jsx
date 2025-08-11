@@ -18,8 +18,22 @@ function Footer({ handleDiscordJoin }) {
             >
               Discord
             </button>
-            <a href="https://github.com/your-github-org" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary text-sm">GitHub</a>
-            <a href="https://twitter.com/your-twitter-handle" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary text-sm">Twitter</a>
+            <a 
+              href="https://github.com/orgs/Duo-Keyboard-Koalition/repositories" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-400 hover:text-primary text-sm"
+            >
+              GitHub
+            </a>
+            <a 
+              href="https://dorahacks.io/org/2861" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-400 hover:text-primary text-sm"
+            >
+              DoraHacks
+            </a>
           </div>
         </div>
       </div>

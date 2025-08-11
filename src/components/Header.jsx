@@ -15,23 +15,7 @@ function Header() {
           <Link to="/about" className="text-white hover:text-primary">About</Link>
           <Link to="/projects" className="text-white hover:text-primary">Projects</Link>
           <Link to="/events" className="text-white hover:text-primary">Events</Link>
-          <Link to="/wins" className="text-white hover:text-primary">Wins</Link>
-          <a 
-            href="https://dorahacks.io/org/2861" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-white hover:text-primary"
-          >
-            DoraHacks <ExternalLink className="h-4 w-4" />
-          </a>
-          <a 
-            href="https://github.com/orgs/Duo-Keyboard-Koalition/repositories" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-white hover:text-primary"
-          >
-            Github <ExternalLink className="h-4 w-4" />
-          </a>
+          <Link to="/auth" className="text-white hover:text-primary">Auth</Link>
         </div>
       </nav>
     </header>

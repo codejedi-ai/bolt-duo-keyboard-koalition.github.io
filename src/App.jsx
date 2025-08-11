@@ -6,7 +6,7 @@ import Home from './components/Home';
 import About from './components/About';
 import Projects from './components/Projects';
 import Events from './components/Events';
-import Wins from './components/Wins';
+import Auth from './components/Auth';
 
 function App() {
   const handleDiscordJoin = () => {
@@ -23,7 +23,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/wins" element={<Wins />} />
+            <Route path="/auth" element={<Auth />} />
           </Routes>
         </main>
         <Footer handleDiscordJoin={handleDiscordJoin} />
