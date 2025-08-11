@@ -12,8 +12,8 @@ function HeroContent() {
             alt="DKK Logo"
             className="w-32 h-32 md:w-48 md:h-48 lg:w-52 lg:h-52 mb-4 lg:mb-0"
           />
-          <div className="flex flex-col lg:ml-6">
-            <span className="text-primary">DUO KEYBOARD</span>
+          <div className="lg:ml-6">
+            <span className="text-primary">DUO KEYBOARD </span>
             <span className="text-white">KOALITION</span>
           </div>
         </h1>
