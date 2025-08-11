@@ -20,8 +20,31 @@ function EventDate() {
 
   // Generate hourly schedule
   const generateHourlySchedule = () => {
+    if (events.length === 0) return [];
+    
+    // Find the earliest and latest event times
+    const eventTimes = events
+      .filter(event => event.time)
+      .map(event => {
+        const eventHour = parseInt(event.time.split(':')[0]);
+        const eventAmPm = event.time.includes('PM') ? 'PM' : 'AM';
+        let eventHour24 = eventHour;
+        if (eventAmPm === 'PM' && eventHour !== 12) eventHour24 += 12;
+        if (eventAmPm === 'AM' && eventHour === 12) eventHour24 = 0;
+        return eventHour24;
+      });
+    
+    if (eventTimes.length === 0) return [];
+    
+    const startHour = Math.min(...eventTimes);
+    const endHour = Math.max(...eventTimes);
+    
+    // Add some buffer hours around events
+    const scheduleStart = Math.max(0, startHour - 1);
+    const scheduleEnd = Math.min(23, endHour + 2);
+    
     const hours = [];
-    for (let i = 0; i < 24; i++) {
+    for (let i = scheduleStart; i <= scheduleEnd; i++) {
       const hour = i === 0 ? 12 : i > 12 ? i - 12 : i;
       const ampm = i < 12 ? 'AM' : 'PM';
       const timeSlot = `${hour}:00 ${ampm}`;
@@ -74,7 +97,123 @@ function EventDate() {
                   <Clock className="w-5 h-5 mr-2" />
                   Daily Schedule
                 </h3>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
+                {hourlySchedule.length > 0 ? (
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {hourlySchedule.map((slot, index) => (
+                      <div
+                        key={index}
+                        className={`
+                          flex items-start p-3 rounded-md border-l-4 transition-colors
+                          ${slot.events.length > 0 
+                            ? 'bg-primary/10 border-primary' 
+                            : 'bg-gray-800/50 border-gray-700'
+                          }
+                        `}
+                      >
+                        <div className="w-20 text-sm font-medium text-gray-400 mt-1">
+                          {slot.time}
+                        </div>
+                        <div className="flex-1 ml-4">
+                          {slot.events.length > 0 ? (
+                            <div className="space-y-2">
+                              {slot.events.map((event, eventIndex) => (
+                                <div key={eventIndex} className="bg-gray-800 p-3 rounded-md">
+                                  <h4 className="font-semibold text-white mb-1">{event.name}</h4>
+                                  <div className="flex items-center text-sm text-gray-400 mb-2">
+                                    <MapPin className="w-3 h-3 mr-1" />
+                                    {event.location}
+                                  </div>
+                                  <p className="text-sm text-gray-300">{event.description}</p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="text-gray-500 text-sm">No events scheduled</div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Clock className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                    <p className="text-gray-400">No timed events for this day</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Event Details Sidebar */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-white mb-4">Event Details</h3>
+            {events.map((event, index) => (
+              <Card key={index} className="bg-gray-900 border-gray-800">
+                <CardContent className="p-4">
+                  <img 
+                    src={event.image} 
+                    alt={event.name} 
+                    className="w-full h-32 object-cover rounded-md mb-4" 
+                  />
+                  <h4 className="font-semibold text-white mb-2">{event.name}</h4>
+                  <div className="flex items-center text-sm text-gray-400 mb-2">
+                    <Clock className="w-4 h-4 mr-1" />
+                    {event.time || 'Time TBA'}
+                  </div>
+                  <div className="flex items-center text-sm text-gray-400 mb-2">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    {event.location}
+                  </div>
+                  <p className="text-sm text-gray-300 mb-4">{event.description}</p>
+                  {event.registrationLink && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="w-full border-primary text-primary hover:bg-primary/20"
+                    >
+                      <a
+                        href={event.registrationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Register
+                      </a>
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <Card className="bg-gray-900 border-gray-800">
+          <CardContent className="p-8 text-center">
+            <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-white mb-2">No Events Scheduled</h3>
+            <p className="text-gray-400 mb-6">
+              There are no events scheduled for {formatDate(date)}. Check out our other upcoming events!
+            </p>
+            <Button
+              asChild
+              className="bg-primary hover:bg-primary/90 text-black"
+            >
+              <a
+                href="https://app.getriver.io/beta/duo-keyboard-koalition"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View All Events
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+    </section>
+  );
+}
+
+export default EventDate;
                   {hourlySchedule.map((slot, index) => (
                     <div
                       key={index}
