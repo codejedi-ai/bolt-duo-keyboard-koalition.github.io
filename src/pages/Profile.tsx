@@ -79,7 +79,7 @@ function Profile(): JSX.Element {
                       Member Since
                     </label>
                     <p className="text-white bg-gray-800 p-3 rounded-md">
-                      {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                      {user.createdAt ? new Date(user.createdAt.toString()).toLocaleDateString() : 'N/A'}
                     </p>
                   </div>
                 </div>

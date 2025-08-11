@@ -1,6 +1,5 @@
 import { useUser } from '@clerk/clerk-react';
 import { Code2, Users, Trophy, Rocket, Calendar, Plus, TrendingUp } from 'lucide-react';
-import { Card, CardContent } from "../components/ui/card";
 import { Link } from 'react-router-dom';
 
 function Dashboard(): JSX.Element {
