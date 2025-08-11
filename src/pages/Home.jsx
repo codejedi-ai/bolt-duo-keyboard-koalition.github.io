@@ -1,6 +1,7 @@
 import Hero from '../components/Hero'
 import { Code2, Users, Trophy, Rocket } from 'lucide-react'
 import { Card, CardContent } from "../components/ui/card"
+import JoinDiscord from '../components/JoinDiscord'
 
 function Home() {
   return (
@@ -47,6 +48,8 @@ function Home() {
           </CardContent>
         </Card>
         </div>
+
+        <JoinDiscord />
       </section>
     </>
   )
