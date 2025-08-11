@@ -1,12 +1,13 @@
 import { useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Calendar, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, ExternalLink, Clock } from 'lucide-react';
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import eventsData from '../data/events.json';
 
 function Events() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [hoveredDate, setHoveredDate] = useState(null);
   const navigate = useNavigate();
 
   const monthNames = [
@@ -144,6 +145,8 @@ function Events() {
                         transition-colors
                       `}
                       onClick={() => handleDateClick(day)}
+                      onMouseEnter={() => day && setHoveredDate(day)}
+                      onMouseLeave={() => setHoveredDate(null)}
                     >
                       {day && (
                         <>
@@ -177,8 +180,10 @@ function Events() {
 
         {/* Upcoming Events Sidebar */}
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-white mb-4">Upcoming Events</h3>
-          {eventsData.slice(0, 3).map((event, index) => (
+          <h3 className="text-xl font-semibold text-white mb-4">
+            {hoveredDate ? `Events on ${monthNames[currentDate.getMonth()]} ${hoveredDate}` : 'Upcoming Events'}
+          </h3>
+          {(hoveredDate ? getEventsForDate(hoveredDate) : eventsData.slice(0, 3)).map((event, index) => (
             <Card key={index} className="bg-gray-900 border-gray-800">
               <CardContent className="p-4">
                 <h4 className="font-semibold text-white mb-2">{event.name}</h4>
@@ -186,6 +191,12 @@ function Events() {
                   <Calendar className="w-4 h-4 mr-1" />
                   {new Date(event.date).toLocaleDateString()}
                 </div>
+                {event.time && (
+                  <div className="flex items-center text-sm text-gray-400 mb-2">
+                    <Clock className="w-4 h-4 mr-1" />
+                    {event.time}
+                  </div>
+                )}
                 <p className="text-sm text-gray-300 mb-3">{event.description}</p>
                 {event.registrationLink && (
                   <Button
@@ -206,6 +217,14 @@ function Events() {
               </CardContent>
             </Card>
           ))}
+          {hoveredDate && getEventsForDate(hoveredDate).length === 0 && (
+            <Card className="bg-gray-900 border-gray-800">
+              <CardContent className="p-4 text-center">
+                <Calendar className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                <p className="text-gray-400">No events on this date</p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 

@@ -2,6 +2,7 @@
     {
       "name": "Annual Hackathon",
       "date": "2024-06-15",
+      "time": "9:00 AM",
       "description": "Our flagship 48-hour coding marathon with exciting challenges and prizes",
       "image": "/images/annual-hackathon.jpg",
       "location": "Virtual Event",
@@ -10,6 +11,7 @@
     {
       "name": "Keyboard Building Workshop",
       "date": "2024-07-20",
+      "time": "2:00 PM",
       "description": "Learn to build your own mechanical keyboard from scratch",
       "image": "/images/keyboard-workshop.jpg",
       "location": "DKK Makerspace, San Francisco",
@@ -18,6 +20,7 @@
     {
       "name": "Tech Talk: Future of Input Devices",
       "date": "2024-08-10",
+      "time": "6:00 PM",
       "description": "Exploring cutting-edge input technologies with industry experts",
       "image": "/images/tech-talk.jpg",
       "location": "Virtual Event",
@@ -26,6 +29,7 @@
     {
       "name": "DKK Code Jam",
       "date": "2024-09-05",
+      "time": "10:00 AM",
       "description": "Rapid-fire coding challenges to test your skills and speed",
       "image": "/images/code-jam.jpg",
       "location": "Multiple Locations",
