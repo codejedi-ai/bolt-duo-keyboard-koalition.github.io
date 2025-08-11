@@ -1,50 +1,47 @@
 [
-    {
-      "name": "Annual Hackathon",
-      "date": "2024-06-15",
-      "time": "9:00 AM",
-      "description": "Our flagship 48-hour coding marathon with exciting challenges and prizes",
-      "image": "/images/annual-hackathon.jpg",
-      "location": "Virtual Event",
-      "registrationLink": "https://dkk-hackathon2024.devpost.com"
-    },
-    {
-      "name": "Keyboard Building Workshop",
-      "date": "2024-07-20",
-      "time": "2:00 PM",
-      "description": "Learn to build your own mechanical keyboard from scratch",
-      "image": "/images/keyboard-workshop.jpg",
-      "location": "DKK Makerspace, San Francisco",
-      "registrationLink": "https://dkk-events.com/keyboard-workshop"
-    },
-    {
-      "name": "Tech Talk: Future of Input Devices",
-      "date": "2024-08-10",
-      "time": "6:00 PM",
-      "description": "Exploring cutting-edge input technologies with industry experts",
-      "image": "/images/tech-talk.jpg",
-      "location": "Virtual Event",
-      "registrationLink": "https://dkk-events.com/tech-talk-2024"
-    },
-    {
-      "name": "DKK Code Jam",
-      "date": "2024-09-05",
-      "time": "10:00 AM",
-      "description": "Rapid-fire coding challenges to test your skills and speed",
-      "image": "/images/code-jam.jpg",
-      "location": "Multiple Locations",
-      "registrationLink": "https://dkk-events.com/code-jam-2024"
-    }
-  ],
-  "events": [
-    {
-      "name": "Weekly Code Review Session",
-      "date": "2025-01-11",
-      "time": "3:00 PM",
-      "description": "Join us for a collaborative code review session where we'll examine recent projects and share best practices.",
-      "image": "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=800",
-      "location": "Virtual Event - Discord",
-      "registrationLink": "https://discord.gg/6GaWZAawUc"
-    }
-  ]
-}
+  {
+    "name": "Annual Hackathon",
+    "date": "2024-06-15",
+    "time": "9:00 AM",
+    "description": "Our flagship 48-hour coding marathon with exciting challenges and prizes",
+    "image": "/images/annual-hackathon.jpg",
+    "location": "Virtual Event",
+    "registrationLink": "https://dkk-hackathon2024.devpost.com"
+  },
+  {
+    "name": "Keyboard Building Workshop",
+    "date": "2024-07-20",
+    "time": "2:00 PM",
+    "description": "Learn to build your own mechanical keyboard from scratch",
+    "image": "/images/keyboard-workshop.jpg",
+    "location": "DKK Makerspace, San Francisco",
+    "registrationLink": "https://dkk-events.com/keyboard-workshop"
+  },
+  {
+    "name": "Tech Talk: Future of Input Devices",
+    "date": "2024-08-10",
+    "time": "6:00 PM",
+    "description": "Exploring cutting-edge input technologies with industry experts",
+    "image": "/images/tech-talk.jpg",
+    "location": "Virtual Event",
+    "registrationLink": "https://dkk-events.com/tech-talk-2024"
+  },
+  {
+    "name": "DKK Code Jam",
+    "date": "2024-09-05",
+    "time": "10:00 AM",
+    "description": "Rapid-fire coding challenges to test your skills and speed",
+    "image": "/images/code-jam.jpg",
+    "location": "Multiple Locations",
+    "registrationLink": "https://dkk-events.com/code-jam-2024"
+  },
+  {
+    "name": "Weekly Code Review Session",
+    "date": "2025-01-11",
+    "time": "3:00 PM",
+    "description": "Join us for a collaborative code review session where we'll examine recent projects and share best practices.",
+    "image": "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "location": "Virtual Event - Discord",
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
+  }
+]
