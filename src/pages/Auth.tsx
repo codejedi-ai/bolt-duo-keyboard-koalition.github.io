@@ -1,7 +1,7 @@
 import { SignIn, SignUp } from '@clerk/clerk-react';
 import { useState } from 'react';
 
-function Auth() {
+function Auth(): JSX.Element {
   const [isSignUp, setIsSignUp] = useState(false);
 
   return (

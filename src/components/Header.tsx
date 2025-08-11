@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
 import UserDropdown from './UserDropdown';
 
-function Header() {
+function Header(): JSX.Element {
   return (
     <header className="bg-black border-b border-gray-800">
       <nav className="container mx-auto px-4 py-4">

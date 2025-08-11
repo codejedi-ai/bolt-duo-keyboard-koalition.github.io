@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 
+interface UseScrollReturn {
+  scrollY: number;
+  mounted: boolean;
+}
+
 // Hook for managing scroll-based parallax effect
-export function useScroll() {
+export function useScroll(): UseScrollReturn {
   const [scrollY, setScrollY] = useState(0);
   const [mounted, setMounted] = useState(false);
 

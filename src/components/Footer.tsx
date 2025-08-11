@@ -1,4 +1,8 @@
-function Footer({ handleDiscordJoin }) {
+interface FooterProps {
+  handleDiscordJoin: () => void;
+}
+
+function Footer({ handleDiscordJoin }: FooterProps): JSX.Element {
   return (
     <footer className="bg-gray-900 py-4">
       <div className="container mx-auto px-4">

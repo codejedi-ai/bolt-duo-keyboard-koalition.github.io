@@ -3,15 +3,15 @@ import { useUser, useClerk } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import { User, LogOut, Settings, ChevronDown } from 'lucide-react';
 
-function UserDropdown() {
+function UserDropdown(): JSX.Element | null {
   const { user } = useUser();
   const { signOut } = useClerk();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }

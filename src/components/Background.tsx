@@ -1,5 +1,9 @@
 // Render background elements
-function Background({ parallaxValue }) {
+interface BackgroundProps {
+  parallaxValue: number;
+}
+
+function Background({ parallaxValue }: BackgroundProps): JSX.Element {
   return (
     <>
       {/* Gradient overlay */}

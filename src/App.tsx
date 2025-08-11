@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { ExternalLink } from 'lucide-react';
 import AuthWrapper from './components/AuthWrapper';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -11,7 +10,7 @@ import EventDate from './pages/EventDate';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
 
-function App() {
+function App(): JSX.Element {
   const handleDiscordJoin = () => {
     window.open('https://discord.gg/6GaWZAawUc', '_blank');
   };

@@ -2,7 +2,7 @@ import { DiscIcon as DiscordLogo } from 'lucide-react'
 import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"
 
-function JoinDiscord() {
+function JoinDiscord(): JSX.Element {
   const discordInviteLink = "https://discord.com/invite/6GaWZAawUc"
 
   const handleLearnMore = () => {

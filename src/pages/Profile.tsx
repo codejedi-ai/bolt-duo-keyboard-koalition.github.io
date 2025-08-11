@@ -1,6 +1,6 @@
 import { UserProfile } from '@clerk/clerk-react';
 
-function Profile() {
+function Profile(): JSX.Element {
   return (
     <section className="w-full h-full flex items-center justify-center">
       <div className="w-full max-w-4xl">

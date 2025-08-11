@@ -5,7 +5,7 @@ import { Code2, Users, Trophy, Rocket } from 'lucide-react'
 import { Card, CardContent } from "../components/ui/card"
 import JoinDiscord from '../components/JoinDiscord'
 
-function Home() {
+function Home(): JSX.Element {
   const { isSignedIn, user } = useUser();
 
   return (

@@ -5,9 +5,19 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import eventsData from '../data/events.json';
 
-function Events() {
+interface Event {
+  name: string;
+  date: string;
+  time?: string;
+  description: string;
+  image: string;
+  location: string;
+  registrationLink: string;
+}
+
+function Events(): JSX.Element {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [hoveredDate, setHoveredDate] = useState(null);
+  const [hoveredDate, setHoveredDate] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const monthNames = [
@@ -17,7 +27,7 @@ function Events() {
 
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  const getDaysInMonth = (date) => {
+  const getDaysInMonth = (date: Date): (number | null)[] => {
     const year = date.getFullYear();
     const month = date.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -40,10 +50,10 @@ function Events() {
     return days;
   };
 
-  const getEventsForDate = (day) => {
+  const getEventsForDate = (day: number | null): Event[] => {
     if (!day) return [];
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return eventsData
+    return (eventsData as Event[])
       .filter(event => event.date === dateStr)
       .sort((a, b) => {
         if (!a.time || !b.time) return 0;
@@ -54,7 +64,7 @@ function Events() {
       });
   };
 
-  const convertTo24Hour = (time12h) => {
+  const convertTo24Hour = (time12h: string): string => {
     const [time, modifier] = time12h.split(' ');
     let [hours, minutes] = time.split(':');
     if (hours === '12') {
@@ -66,11 +76,11 @@ function Events() {
     return `${hours}:${minutes}`;
   };
 
-  const getUpcomingEvents = () => {
+  const getUpcomingEvents = (): Event[] => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    return eventsData
+    return (eventsData as Event[])
       .filter(event => {
         const eventDate = new Date(event.date);
         return eventDate >= today;
@@ -79,15 +89,15 @@ function Events() {
       .slice(0, 3);
   };
 
-  const navigateMonth = (direction) => {
-    setCurrentDate(prev => {
+  const navigateMonth = (direction: number): void => {
+    setCurrentDate((prev: Date) => {
       const newDate = new Date(prev);
       newDate.setMonth(prev.getMonth() + direction);
       return newDate;
     });
   };
 
-  const handleDateClick = (day) => {
+  const handleDateClick = (day: number | null): void => {
     if (!day) return;
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     navigate(`/events/${dateStr}`);

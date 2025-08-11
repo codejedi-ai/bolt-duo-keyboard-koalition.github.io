@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 // Render Hero content
-function HeroContent() {
+function HeroContent(): JSX.Element {
   return (
     <div className="relative z-20 h-full w-full px-4 flex flex-col justify-center items-center">
       <div className="flex flex-col items-center text-center animate-fade-in-up">

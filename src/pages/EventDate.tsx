@@ -4,11 +4,27 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import eventsData from '../data/events.json';
 
-function EventDate() {
+interface Event {
+  name: string;
+  date: string;
+  time?: string;
+  description: string;
+  image: string;
+  location: string;
+  registrationLink: string;
+}
+
+interface TimeSlot {
+  time: string;
+  hour24: number;
+  events: Event[];
+}
+
+function EventDate(): JSX.Element {
   const { date } = useParams();
-  const events = eventsData.filter(event => event.date === date);
+  const events = (eventsData as Event[]).filter(event => event.date === date);
   
-  const formatDate = (dateStr) => {
+  const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { 
       weekday: 'long', 
@@ -19,7 +35,7 @@ function EventDate() {
   };
 
   // Generate hourly schedule
-  const generateHourlySchedule = () => {
+  const generateHourlySchedule = (): TimeSlot[] => {
     if (events.length === 0) return [];
     
     // Find the earliest and latest event times
@@ -43,7 +59,7 @@ function EventDate() {
     const scheduleStart = Math.max(0, startHour - 1);
     const scheduleEnd = Math.min(23, endHour + 2);
     
-    const hours = [];
+    const hours: TimeSlot[] = [];
     for (let i = scheduleStart; i <= scheduleEnd; i++) {
       const hour = i === 0 ? 12 : i > 12 ? i - 12 : i;
       const ampm = i < 12 ? 'AM' : 'PM';

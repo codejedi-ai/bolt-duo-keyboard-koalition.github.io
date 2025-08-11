@@ -1,4 +1,4 @@
-function About() {
+function About(): JSX.Element {
   return (
     <section className="max-w-3xl mx-auto py-16 px-4">
       <h2 className="text-3xl font-bold mb-6">About the Duo Keyboard Koalition</h2>

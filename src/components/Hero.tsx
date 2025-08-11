@@ -3,7 +3,7 @@ import Background from './Background';
 import HeroContent from './HeroContent';
 
 // Main Hero component
-function Hero() {
+function Hero(): JSX.Element {
   const { scrollY, mounted } = useScroll();
   const parallaxValue = scrollY * 0.4;
 
