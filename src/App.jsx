@@ -6,6 +6,7 @@ import Home from './components/Home';
 import About from './components/About';
 import Projects from './components/Projects';
 import Events from './components/Events';
+import EventDate from './components/EventDate';
 import Auth from './components/Auth';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/events/:date" element={<EventDate />} />
             <Route path="/auth" element={<Auth />} />
           </Routes>
         </main>
