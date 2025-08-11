@@ -12,7 +12,7 @@ function Home() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-12">
         <Card className="bg-gray-900 border-gray-800">
           <CardContent className="p-6">
             <Code2 className="w-12 h-12 text-primary mb-4" />
