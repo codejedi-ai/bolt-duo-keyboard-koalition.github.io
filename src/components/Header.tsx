@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
-import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/clerk-react';
 import UserDropdown from './UserDropdown';
 
 function Header(): JSX.Element {
+  const { isSignedIn } = useUser();
+
   return (
     <header className="bg-black border-b border-gray-800">
       <nav className="container mx-auto px-4 py-4">
@@ -20,8 +22,13 @@ function Header(): JSX.Element {
           </Link>
           
           <div className="flex items-center gap-6">
-            <Link to="/" className="text-white hover:text-primary transition-colors">Home</Link>
-            <Link to="/about" className="text-white hover:text-primary transition-colors">About</Link>
+            <SignedOut>
+              <Link to="/" className="text-white hover:text-primary transition-colors">Home</Link>
+            </SignedOut>
+            <SignedIn>
+              <Link to="/dashboard" className="text-white hover:text-primary transition-colors">Dashboard</Link>
+              <Link to="/my-projects" className="text-white hover:text-primary transition-colors">My Projects</Link>
+            </SignedIn>
             <Link to="/projects" className="text-white hover:text-primary transition-colors">Projects</Link>
             <Link to="/events" className="text-white hover:text-primary transition-colors">Events</Link>
             <SignedOut>
