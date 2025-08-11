@@ -9,6 +9,7 @@ import Projects from './pages/Projects';
 import Events from './pages/Events';
 import EventDate from './pages/EventDate';
 import Auth from './pages/Auth';
+import Profile from './pages/Profile';
 
 function App() {
   const handleDiscordJoin = () => {
@@ -28,6 +29,7 @@ function App() {
               <Route path="/events" element={<Events />} />
               <Route path="/events/:date" element={<EventDate />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </main>
           <Footer handleDiscordJoin={handleDiscordJoin} />
