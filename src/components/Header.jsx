@@ -7,7 +7,7 @@ function Header() {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <img
-              src="/images/dkk-logo-removebg-preview.png"
+              src="/images/logo_ngb.png"
               alt="DKK Logo"
               className="w-10 h-10 mr-3"
             />
