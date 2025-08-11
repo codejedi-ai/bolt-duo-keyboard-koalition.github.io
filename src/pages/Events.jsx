@@ -4,15 +4,11 @@ import { ChevronLeft, ChevronRight, Calendar, ExternalLink, Clock } from 'lucide
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import eventsData from '../data/events.json';
-import { generateRecurringEvents, getEventsForDate, getUpcomingEvents } from '../utils/eventUtils';
 
 function Events() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [hoveredDate, setHoveredDate] = useState(null);
   const navigate = useNavigate();
-  
-  // Generate all events including recurring ones
-  const allEvents = generateRecurringEvents(eventsData);
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -44,13 +40,44 @@ function Events() {
     return days;
   };
 
-  const getEventsForDay = (day) => {
+  const getEventsForDate = (day) => {
     if (!day) return [];
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return getEventsForDate(allEvents, dateStr);
+    return eventsData
+      .filter(event => event.date === dateStr)
+      .sort((a, b) => {
+        if (!a.time || !b.time) return 0;
+        // Convert time to 24-hour format for sorting
+        const timeA = convertTo24Hour(a.time);
+        const timeB = convertTo24Hour(b.time);
+        return timeA.localeCompare(timeB);
+      });
   };
 
-  const upcomingEvents = getUpcomingEvents(allEvents);
+  const convertTo24Hour = (time12h) => {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') {
+      hours = '00';
+    }
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return `${hours}:${minutes}`;
+  };
+
+  const getUpcomingEvents = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return eventsData
+      .filter(event => {
+        const eventDate = new Date(event.date);
+        return eventDate >= today;
+      })
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(0, 3);
+  };
 
   const navigateMonth = (direction) => {
     setCurrentDate(prev => {
@@ -138,7 +165,7 @@ function Events() {
               {/* Calendar grid */}
               <div className="grid grid-cols-7 gap-1">
                 {days.map((day, index) => {
-                  const events = getEventsForDay(day);
+                  const events = getEventsForDate(day);
                   const hasEvents = events.length > 0;
                   const today = new Date();
                   const isToday = day && 
@@ -190,7 +217,7 @@ function Events() {
           <h3 className="text-xl font-semibold text-white mb-4">
             {hoveredDate ? `Events on ${monthNames[currentDate.getMonth()]} ${hoveredDate}` : 'Upcoming Events'}
           </h3>
-          {(hoveredDate ? getEventsForDay(hoveredDate) : upcomingEvents).map((event, index) => (
+          {(hoveredDate ? getEventsForDate(hoveredDate) : getUpcomingEvents()).map((event, index) => (
             <Card key={index} className="bg-gray-900 border-gray-800">
               <CardContent className="p-4">
                 <h4 className="font-semibold text-white mb-2">{event.name}</h4>
@@ -202,11 +229,6 @@ function Events() {
                   <div className="flex items-center text-sm text-gray-400 mb-2">
                     <Clock className="w-4 h-4 mr-1" />
                     {event.time}
-                    {event.isRecurring && (
-                      <span className="ml-2 text-xs bg-primary/20 text-primary px-2 py-0.5 rounded">
-                        Recurring
-                      </span>
-                    )}
                   </div>
                 )}
                 <p className="text-sm text-gray-300 mb-3">{event.description}</p>
@@ -229,7 +251,7 @@ function Events() {
               </CardContent>
             </Card>
           ))}
-          {hoveredDate && getEventsForDay(hoveredDate).length === 0 && (
+          {hoveredDate && getEventsForDate(hoveredDate).length === 0 && (
             <Card className="bg-gray-900 border-gray-800">
               <CardContent className="p-4 text-center">
                 <Calendar className="w-8 h-8 text-gray-600 mx-auto mb-2" />
