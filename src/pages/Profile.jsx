@@ -2,8 +2,8 @@ import { UserProfile } from '@clerk/clerk-react';
 
 function Profile() {
   return (
-    <section className="w-full h-full">
-      <div className="w-full h-full">
+    <section className="w-full h-full flex items-center justify-center">
+      <div className="w-full max-w-4xl">
         <UserProfile 
           appearance={{
             baseTheme: undefined,
