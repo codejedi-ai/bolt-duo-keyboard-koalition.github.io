@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 // Render Hero content
 function HeroContent() {
   return (
-    <div className="relative z-20 h-full container mx-auto px-4 flex flex-col justify-center items-center">
+    <div className="relative z-20 h-full w-full px-4 flex flex-col justify-center items-center">
       <div className="flex flex-col items-center text-center animate-fade-in-up">
         <h1 className="flex flex-col lg:flex-row items-center text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight">
           {/* Logo */}

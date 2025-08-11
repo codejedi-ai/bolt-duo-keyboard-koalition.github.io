@@ -17,7 +17,7 @@ function Hero() {
   }
 
   return (
-    <div className="relative w-full h-[70vh] min-h-[500px] max-h-[800px] overflow-hidden bg-black">
+    <div className="relative w-screen h-[70vh] min-h-[500px] max-h-[800px] overflow-hidden bg-black -mx-4">
       <Background parallaxValue={parallaxValue} />
       <HeroContent />
     </div>
