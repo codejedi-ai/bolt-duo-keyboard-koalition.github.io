@@ -34,12 +34,20 @@ function UserDropdown() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 text-white hover:text-primary transition-colors rounded-md hover:bg-gray-800"
       >
-        <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-          <span className="text-black font-semibold text-sm">
-            {user.firstName?.charAt(0) || user.emailAddresses[0]?.emailAddress.charAt(0) || 'U'}
-          </span>
-        </div>
-        <span className="hidden sm:block text-sm font-medium">
+        {user.imageUrl ? (
+          <img
+            src={user.imageUrl}
+            alt={user.firstName || 'User'}
+            className="w-8 h-8 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+            <span className="text-black font-semibold text-sm">
+              {user.firstName?.charAt(0) || user.emailAddresses[0]?.emailAddress.charAt(0) || 'U'}
+            </span>
+          </div>
+        )}
+        <span className="text-sm font-medium">
           {user.firstName || user.emailAddresses[0]?.emailAddress.split('@')[0]}
         </span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
