@@ -25,12 +25,12 @@ function AuthButton() {
   }
 
   return (
-    <Link 
-      to="/auth" 
+    <a
+      href="https://regular-fox-83.accounts.dev/sign-in"
       className="px-4 py-2 bg-primary text-black rounded-md hover:bg-primary/90 transition-all duration-200 font-medium"
     >
       Login
-    </Link>
+    </a>
   );
 }
 
