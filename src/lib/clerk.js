@@ -30,12 +30,12 @@ export const initializeClerk = async () => {
 };
 
 // Account Portal URLs
-export const getSignInUrl = (redirectUrl = window.location.origin) => {
-  return `https://regular-fox-83.accounts.dev/sign-in?redirect_url=${encodeURIComponent(redirectUrl)}`;
+export const getSignInUrl = () => {
+  return `https://regular-fox-83.accounts.dev/sign-in?redirect_url=${encodeURIComponent(window.location.origin)}`;
 };
 
-export const getSignUpUrl = (redirectUrl = window.location.origin) => {
-  return `https://regular-fox-83.accounts.dev/sign-up?redirect_url=${encodeURIComponent(redirectUrl)}`;
+export const getSignUpUrl = () => {
+  return `https://regular-fox-83.accounts.dev/sign-up?redirect_url=${encodeURIComponent(window.location.origin)}`;
 };
 
 export const getUserProfileUrl = () => {
