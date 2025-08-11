@@ -167,6 +167,11 @@ function Events() {
                 {days.map((day, index) => {
                   const events = getEventsForDate(day);
                   const hasEvents = events.length > 0;
+                  const today = new Date();
+                  const isToday = day && 
+                    day === today.getDate() && 
+                    currentDate.getMonth() === today.getMonth() && 
+                    currentDate.getFullYear() === today.getFullYear();
                   
                   return (
                     <div
@@ -174,7 +179,7 @@ function Events() {
                       className={`
                         min-h-[100px] p-1 border border-gray-800 rounded-md
                         ${day ? 'bg-gray-800 hover:bg-gray-700 cursor-pointer' : 'bg-transparent'}
-                        ${hasEvents ? 'ring-2 ring-primary/50' : ''}
+                        ${isToday ? 'ring-2 ring-yellow-400 border-yellow-400' : hasEvents ? 'ring-2 ring-primary/50 border-gray-700' : 'border-gray-700'}
                         transition-colors
                       `}
                       onClick={() => handleDateClick(day)}
@@ -183,7 +188,7 @@ function Events() {
                     >
                       {day && (
                         <>
-                          <div className="text-sm text-white font-medium mb-1 text-center">{day}</div>
+                          <div className={`text-sm font-medium mb-1 text-center ${isToday ? 'text-yellow-400' : 'text-white'}`}>{day}</div>
                           {hasEvents && (
                             <div className="space-y-0.5">
                               {events.map((event, eventIndex) => (
