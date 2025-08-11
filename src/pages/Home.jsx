@@ -1,30 +1,12 @@
 import { useState, useEffect } from 'preact/hooks';
-import { clerk } from '../lib/clerk';
+import { useUser } from '@clerk/clerk-react';
 import Hero from '../components/Hero'
 import { Code2, Users, Trophy, Rocket } from 'lucide-react'
 import { Card, CardContent } from "../components/ui/card"
 import JoinDiscord from '../components/JoinDiscord'
 
 function Home() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const checkAuthState = () => {
-      const signedIn = clerk.user !== null;
-      setIsSignedIn(signedIn);
-      setUser(clerk.user);
-    };
-
-    checkAuthState();
-
-    // Listen for auth state changes
-    const unsubscribe = clerk.addListener(checkAuthState);
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
+  const { isSignedIn, user } = useUser();
 
   // Dashboard view for authenticated users
   if (isSignedIn && user) {

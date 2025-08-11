@@ -1,29 +1,7 @@
-import { useState, useEffect } from 'preact/hooks';
-import { clerk, initializeClerk } from '../lib/clerk';
+import { useAuth } from '@clerk/clerk-react';
 
 function AuthWrapper({ children }) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isSignedIn, setIsSignedIn] = useState(false);
-
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        await initializeClerk();
-        setIsSignedIn(clerk.user !== null);
-        setIsLoaded(true);
-
-        // Listen for auth state changes
-        clerk.addListener(({ user }) => {
-          setIsSignedIn(user !== null);
-        });
-      } catch (error) {
-        console.error('Clerk initialization failed:', error);
-        setIsLoaded(true);
-      }
-    };
-
-    initialize();
-  }, []);
+  const { isLoaded } = useAuth();
 
   if (!isLoaded) {
     return (

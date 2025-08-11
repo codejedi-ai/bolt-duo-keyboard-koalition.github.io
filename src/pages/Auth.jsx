@@ -1,42 +1,50 @@
-import { useEffect } from 'preact/hooks';
-import { useNavigate } from 'react-router-dom';
-import { clerk, getSignInUrl, getSignUpUrl } from '../lib/clerk';
+import { SignIn, SignUp } from '@clerk/clerk-react';
+import { useState } from 'preact/hooks';
 
 function Auth() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Check if user is already signed in
-    if (clerk.user) {
-      navigate('/');
-      return;
-    }
-
-    // Redirect to Account Portal sign-in page
-    window.location.href = getSignInUrl();
-  }, [navigate]);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   return (
     <section className="max-w-md mx-auto py-16 px-4">
-      <div className="text-center">
-        <h2 className="text-3xl font-bold text-white mb-2">Redirecting...</h2>
-        <p className="text-gray-400">
-          Taking you to the sign-in page...
-        </p>
-        <div className="mt-8 space-y-4">
-          <a 
-            href={getSignInUrl()}
-            className="block px-6 py-3 bg-primary text-black rounded-md hover:bg-primary/90 transition-colors font-medium"
+      <div className="flex justify-center mb-8">
+        <div className="flex bg-gray-800 rounded-lg p-1">
+          <button
+            onClick={() => setIsSignUp(false)}
+            className={`px-4 py-2 rounded-md transition-colors ${
+              !isSignUp 
+                ? 'bg-primary text-black' 
+                : 'text-gray-400 hover:text-white'
+            }`}
           >
             Sign In
-          </a>
-          <a 
-            href={getSignUpUrl()}
-            className="block px-6 py-3 border border-primary text-primary rounded-md hover:bg-primary/20 transition-colors font-medium"
+          </button>
+          <button
+            onClick={() => setIsSignUp(true)}
+            className={`px-4 py-2 rounded-md transition-colors ${
+              isSignUp 
+                ? 'bg-primary text-black' 
+                : 'text-gray-400 hover:text-white'
+            }`}
           >
             Sign Up
-          </a>
+          </button>
         </div>
+      </div>
+
+      <div className="flex justify-center">
+        {isSignUp ? (
+          <SignUp 
+            routing="path"
+            path="/auth"
+            redirectUrl="/"
+          />
+        ) : (
+          <SignIn 
+            routing="path"
+            path="/auth"
+            redirectUrl="/"
+          />
+        )}
       </div>
     </section>
   );
