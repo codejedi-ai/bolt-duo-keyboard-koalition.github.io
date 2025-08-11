@@ -174,13 +174,3 @@ function Home() {
 }
 
 export default Home
-
-        </div>
-
-        <JoinDiscord />
-      </section>
-    </>
-  )
-}
-
-export default Home
