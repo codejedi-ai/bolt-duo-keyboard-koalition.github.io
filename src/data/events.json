@@ -1,7 +1,7 @@
 [
   {
     "name": "Annual Hackathon",
-    "date": "2024-06-15",
+    "date": "2025-06-15",
     "time": "9:00 AM",
     "description": "Our flagship 48-hour coding marathon with exciting challenges and prizes",
     "image": "/images/annual-hackathon.jpg",
@@ -10,7 +10,7 @@
   },
   {
     "name": "Keyboard Building Workshop",
-    "date": "2024-08-20",
+    "date": "2025-08-20",
     "time": "2:00 PM",
     "description": "Learn to build your own mechanical keyboard from scratch",
     "image": "/images/keyboard-workshop.jpg",
