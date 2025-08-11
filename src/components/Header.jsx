@@ -33,17 +33,29 @@ function Header() {
             <SignedIn>
               <UserButton 
                 appearance={{
-                  baseTheme: 'dark',
+                  baseTheme: undefined,
                   variables: {
                     colorPrimary: '#FFA500',
+                    colorBackground: '#111827',
+                    colorInputBackground: '#1F2937',
+                    colorInputText: '#FFFFFF',
+                    colorText: '#FFFFFF',
+                    colorTextSecondary: '#9CA3AF',
+                    colorNeutral: '#374151',
+                    colorDanger: '#EF4444',
+                    colorSuccess: '#10B981',
+                    colorWarning: '#F59E0B',
+                    borderRadius: '0.375rem',
+                    spacingUnit: '1rem'
                   },
                   elements: {
-                    avatarBox: "w-8 h-8",
-                    userButtonPopoverCard: "bg-gray-800 border border-gray-700",
-                    userButtonPopoverActions: "bg-gray-800",
-                    userButtonPopoverActionButton: "text-white hover:bg-gray-700",
+                    avatarBox: "w-8 h-8 border-2 border-gray-700",
+                    userButtonPopoverCard: "bg-gray-900 border border-gray-700 shadow-xl",
+                    userButtonPopoverActions: "bg-gray-900",
+                    userButtonPopoverActionButton: "text-white hover:bg-gray-800 transition-colors",
                     userButtonPopoverActionButtonText: "text-white",
-                    userButtonPopoverFooter: "bg-gray-800 border-t border-gray-700"
+                    userButtonPopoverFooter: "bg-gray-900 border-t border-gray-700",
+                    userButtonPopoverActionButtonIcon: "text-gray-400"
                   }
                 }}
               />
