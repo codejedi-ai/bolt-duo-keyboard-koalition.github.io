@@ -15,6 +15,8 @@ function Background({ parallaxValue }) {
           alt="Background"
           className="w-full h-full object-cover"
           style={{
+            objectFit: "cover",
+            objectPosition: "center",
             filter: "brightness(0.7)",
           }}
         />
