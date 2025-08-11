@@ -52,3 +52,5 @@ function JoinDiscord() {
 }
 
 export default JoinDiscord
+  )
+}
