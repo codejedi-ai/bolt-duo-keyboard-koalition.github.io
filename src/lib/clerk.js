@@ -38,6 +38,6 @@ export const getSignUpUrl = (redirectUrl = window.location.origin) => {
   return `https://regular-fox-83.accounts.dev/sign-up?redirect_url=${encodeURIComponent(redirectUrl)}`;
 };
 
-export const getUserProfileUrl = (redirectUrl = window.location.origin) => {
-  return `https://regular-fox-83.accounts.dev/user?redirect_url=${encodeURIComponent(redirectUrl)}`;
+export const getUserProfileUrl = () => {
+  return `https://regular-fox-83.accounts.dev/user?redirect_url=${encodeURIComponent(window.location.origin)}`;
 };
