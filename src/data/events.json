@@ -1,47 +1,101 @@
 [
   {
-    "name": "Pre Hackathon Networking - Hack The North",
-    "date": "2025-08-05",
-    "time": "9:00 AM",
-    "description": "Network session before a major hackathon to meet fellow participants and form teams",
-    "image": "https://image.pollinations.ai/prompt/hackathon networking event people collaborating coding?height=576&nologo=true&model=flux&seed=42",
-    "location": "Waterloo, Ontario",
-    "registrationLink": "https://dkk-hackathon2024.devpost.com"
+    "name": "Vibe Coding Session",
+    "date": "2025-08-03",
+    "time": "2:00 PM",
+    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
+    "image": "https://image.pollinations.ai/prompt/relaxed coding session developers working together chill vibe?height=576&nologo=true&model=flux&seed=42",
+    "location": "William Cafe, Waterloo",
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
   },
   {
     "name": "Leetcode Session",
-    "date": "2025-08-12",
-    "time": "2:00 PM",
+    "date": "2025-08-01",
+    "time": "7:00 PM",
     "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
     "image": "https://image.pollinations.ai/prompt/leetcode coding session algorithms programming?height=576&nologo=true&model=flux&seed=42",
     "location": "Online",
-    "registrationLink": "https://dkk-events.com/leetcode-session"
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
   },
   {
-    "name": "Tech Talk: Future of AI",
-    "date": "2025-08-18",
-    "time": "6:00 PM",
-    "description": "Exploring cutting-edge AI technologies with industry experts",
-    "image": "https://image.pollinations.ai/prompt/artificial intelligence tech talk future technology?height=576&nologo=true&model=flux&seed=42",
+    "name": "Leetcode Session",
+    "date": "2025-08-08",
+    "time": "7:00 PM",
+    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
+    "image": "https://image.pollinations.ai/prompt/leetcode coding session algorithms programming?height=576&nologo=true&model=flux&seed=42",
     "location": "Online",
-    "registrationLink": "https://dkk-events.com/tech-talk-2024"
-  },
-  {
-    "name": "Leetcode Codeoff",
-    "date": "2025-08-25",
-    "time": "10:00 AM",
-    "description": "LeetCode problem showdown - competitive coding challenge to test your skills",
-    "image": "https://image.pollinations.ai/prompt/competitive programming coding contest leetcode challenge?height=576&nologo=true&model=flux&seed=42",
-    "location": "Waterloo, Ontario",
-    "registrationLink": "https://dkk-events.com/leetcode-codeoff"
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
   },
   {
     "name": "Vibe Coding Session",
-    "date": "2025-08-30",
-    "time": "3:00 PM",
+    "date": "2025-08-10",
+    "time": "2:00 PM",
     "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
     "image": "https://image.pollinations.ai/prompt/relaxed coding session developers working together chill vibe?height=576&nologo=true&model=flux&seed=42",
-    "location": "Waterloo, Ontario",
+    "location": "William Cafe, Waterloo",
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
+  },
+  {
+    "name": "Leetcode Session",
+    "date": "2025-08-15",
+    "time": "7:00 PM",
+    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
+    "image": "https://image.pollinations.ai/prompt/leetcode coding session algorithms programming?height=576&nologo=true&model=flux&seed=42",
+    "location": "Online",
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
+  },
+  {
+    "name": "Vibe Coding Session",
+    "date": "2025-08-17",
+    "time": "2:00 PM",
+    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
+    "image": "https://image.pollinations.ai/prompt/relaxed coding session developers working together chill vibe?height=576&nologo=true&model=flux&seed=42",
+    "location": "William Cafe, Waterloo",
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
+  },
+  {
+    "name": "Leetcode Session",
+    "date": "2025-08-22",
+    "time": "7:00 PM",
+    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
+    "image": "https://image.pollinations.ai/prompt/leetcode coding session algorithms programming?height=576&nologo=true&model=flux&seed=42",
+    "location": "Online",
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
+  },
+  {
+    "name": "Vibe Coding Session",
+    "date": "2025-08-24",
+    "time": "2:00 PM",
+    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
+    "image": "https://image.pollinations.ai/prompt/relaxed coding session developers working together chill vibe?height=576&nologo=true&model=flux&seed=42",
+    "location": "William Cafe, Waterloo",
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
+  },
+  {
+    "name": "Leetcode Session",
+    "date": "2025-08-29",
+    "time": "7:00 PM",
+    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
+    "image": "https://image.pollinations.ai/prompt/leetcode coding session algorithms programming?height=576&nologo=true&model=flux&seed=42",
+    "location": "Online",
+    "registrationLink": "https://discord.gg/6GaWZAawUc"
+  },
+  {
+    "name": "Hack the North - Pre Hackathon Networking",
+    "date": "2025-08-31",
+    "time": "6:00 PM",
+    "description": "Network session before Hack the North to meet fellow participants and form teams for Canada's biggest hackathon",
+    "image": "https://image.pollinations.ai/prompt/hackathon networking event people collaborating coding hack the north?height=576&nologo=true&model=flux&seed=42",
+    "location": "Online",
+    "registrationLink": "https://hackthenorth.com"
+  },
+  {
+    "name": "Vibe Coding Session",
+    "date": "2025-08-31",
+    "time": "2:00 PM",
+    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
+    "image": "https://image.pollinations.ai/prompt/relaxed coding session developers working together chill vibe?height=576&nologo=true&model=flux&seed=42",
+    "location": "William Cafe, Waterloo",
     "registrationLink": "https://discord.gg/6GaWZAawUc"
   }
 ]
