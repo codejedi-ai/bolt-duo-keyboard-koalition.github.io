@@ -1,101 +1,84 @@
-[
-  {
-    "name": "Vibe Coding Session",
-    "date": "2025-08-03",
-    "time": "2:00 PM",
-    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
-    "image": "relaxed coding session developers working together chill vibe",
-    "location": "William Cafe, Waterloo",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Leetcode Session",
-    "date": "2025-08-01",
-    "time": "7:00 PM",
-    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
-    "image": "leetcode coding session algorithms programming",
-    "location": "Online",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Leetcode Session",
-    "date": "2025-08-08",
-    "time": "7:00 PM",
-    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
-    "image": "leetcode coding session algorithms programming",
-    "location": "Online",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Vibe Coding Session",
-    "date": "2025-08-10",
-    "time": "2:00 PM",
-    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
-    "image": "relaxed coding session developers working together chill vibe",
-    "location": "William Cafe, Waterloo",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Leetcode Session",
-    "date": "2025-08-15",
-    "time": "7:00 PM",
-    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
-    "image": "leetcode coding session algorithms programming",
-    "location": "Online",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Vibe Coding Session",
-    "date": "2025-08-17",
-    "time": "2:00 PM",
-    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
-    "image": "relaxed coding session developers working together chill vibe",
-    "location": "William Cafe, Waterloo",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Leetcode Session",
-    "date": "2025-08-22",
-    "time": "7:00 PM",
-    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
-    "image": "https://image.pollinations.ai/prompt/leetcode%20coding%20session%20algorithms%20programming?height=576&nologo=true&model=flux&seed=42",
-    "location": "Online",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Vibe Coding Session",
-    "date": "2025-08-24",
-    "time": "2:00 PM",
-    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
-    "image": "https://image.pollinations.ai/prompt/relaxed%20coding%20session%20developers%20working%20together%20chill%20vibe?height=576&nologo=true&model=flux&seed=42",
-    "location": "William Cafe, Waterloo",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Leetcode Session",
-    "date": "2025-08-29",
-    "time": "7:00 PM",
-    "description": "Collaborative session working on LeetCode problems to improve algorithmic thinking",
-    "image": "https://image.pollinations.ai/prompt/leetcode%20coding%20session%20algorithms%20programming?height=576&nologo=true&model=flux&seed=42",
-    "location": "Online",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
-  },
-  {
-    "name": "Hack the North - Pre Hackathon Networking",
-    "date": "2025-08-31",
-    "time": "6:00 PM",
-    "description": "Network session before Hack the North to meet fellow participants and form teams for Canada's biggest hackathon",
-    "image": "https://image.pollinations.ai/prompt/hackathon%20networking%20event%20people%20collaborating%20coding%20hack%20the%20north?height=576&nologo=true&model=flux&seed=42",
-    "location": "Online",
-    "registrationLink": "https://hackthenorth.com"
-  },
-  {
-    "name": "Vibe Coding Session",
-    "date": "2025-08-31",
-    "time": "2:00 PM",
-    "description": "Relaxed coding session where we work on personal projects and share knowledge in a chill environment",
-    "image": "https://image.pollinations.ai/prompt/relaxed%20coding%20session%20developers%20working%20together%20chill%20vibe?height=576&nologo=true&model=flux&seed=42",
-    "location": "William Cafe, Waterloo",
-    "registrationLink": "https://discord.gg/6GaWZAawUc"
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Card, CardContent } from "./ui/card";
+import { Button } from "./ui/button";
+import { fetchEventsByDate } from '../services/eventsApi';
+import { fixPollinationsImageUrl } from '../utils/imageUtils';
+
+function EventDate() {
+  const { date } = useParams();
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setLoading(true);
+        const eventsData = await fetchEventsByDate(date);
+        setEvents(eventsData);
+      } catch (error) {
+        console.error('Error loading events:', error);
+        setEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (date) {
+      loadEvents();
+    }
+  }, [date]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p>Loading events...</p>
+      </div>
+    );
   }
-]
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <div className="container mx-auto px-4 py-8">
+        <h2 className="text-3xl font-bold mb-8 text-center">
+          Events for {date}
+        </h2>
+        
+        {events.length === 0 ? (
+          <div className="text-center">
+            <p className="text-gray-400">No events scheduled for this date.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {events.map((event, index) => (
+              <Card key={index} className="bg-gray-900 border-gray-800">
+                <CardContent className="p-4">
+                  <img
+                    src={fixPollinationsImageUrl(event.image_url)}
+                    alt={event.name}
+                    className="w-full h-32 object-cover rounded-md mb-4"
+                  />
+                  <h4 className="font-semibold text-white mb-2">{event.name}</h4>
+                  <p className="text-gray-300 text-sm mb-2">{event.description}</p>
+                  <div className="text-gray-400 text-sm mb-4">
+                    <p>📅 {event.date}</p>
+                    <p>🕐 {event.time}</p>
+                    <p>📍 {event.location}</p>
+                  </div>
+                  <Button 
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    onClick={() => window.open(event.registrationLink, '_blank')}
+                  >
+                    Register
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default EventDate;
