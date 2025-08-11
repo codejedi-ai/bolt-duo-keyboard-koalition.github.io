@@ -75,7 +75,7 @@ function MyRSVPEvents(): JSX.Element {
       status: 'past',
       rsvpDate: '2024-12-01'
     }
-  ];
+  ]);
 
   const upcomingEvents = rsvpEvents.filter(event => event.status === 'upcoming');
   const pastEvents = rsvpEvents.filter(event => event.status === 'past');
