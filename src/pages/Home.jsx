@@ -123,6 +123,7 @@ function Home() {
 
       {/* Public home page for non-authenticated users */}
       <SignedOut>
+        <>
         <Hero />
         <section className="mb-16 px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
@@ -168,6 +169,7 @@ function Home() {
 
           <JoinDiscord />
         </section>
+        </>
       </SignedOut>
     </>
   )
