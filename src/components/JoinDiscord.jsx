@@ -50,6 +50,7 @@ function JoinDiscord() {
       </CardContent>
     </Card>
   )
+  )
 }
 
 export default JoinDiscord
