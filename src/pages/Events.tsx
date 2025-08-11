@@ -93,7 +93,7 @@ function Events(): JSX.Element {
     setCurrentDate((prev: Date) => {
       const newDate = new Date(prev);
       newDate.setMonth(prev.getMonth() + direction);
-      return timeA < timeB ? -1 : timeA > timeB ? 1 : 0;
+      return newDate;
     });
   };
 

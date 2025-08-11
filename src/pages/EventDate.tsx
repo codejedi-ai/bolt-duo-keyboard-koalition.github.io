@@ -22,6 +22,21 @@ interface TimeSlot {
 
 function EventDate(): JSX.Element {
   const { date } = useParams();
+  
+  if (!date) {
+    return (
+      <section className="max-w-6xl mx-auto py-16 px-4">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold mb-2">Invalid Date</h2>
+          <p className="text-gray-400">Please select a valid date from the calendar.</p>
+          <Link to="/events" className="text-primary hover:text-primary/80">
+            Back to Calendar
+          </Link>
+        </div>
+      </section>
+    );
+  }
+  
   const events = (eventsData as Event[]).filter(event => event.date === date);
   
   const formatDate = (dateStr: string): string => {

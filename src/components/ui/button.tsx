@@ -75,7 +75,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <StyledButton
         ref={ref}
         variant={getMuiVariant()}
-        size={getMuiSize()}
         className={cn(className)}
         {...props}
       >

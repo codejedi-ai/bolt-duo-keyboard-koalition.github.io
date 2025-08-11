@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, UserPlus, MessageCircle, Github, Linkedin, Search } from 'lucide-react';
+import { Users, UserPlus, MessageCircle, Github, Linkedin, Search, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
