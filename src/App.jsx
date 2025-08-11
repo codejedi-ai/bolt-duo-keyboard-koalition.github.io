@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
+import AuthWrapper from './components/AuthWrapper';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -15,22 +16,24 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col bg-black text-white">
-        <Header />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/events/:date" element={<EventDate />} />
-            <Route path="/auth" element={<Auth />} />
-          </Routes>
-        </main>
-        <Footer handleDiscordJoin={handleDiscordJoin} />
-      </div>
-    </Router>
+    <AuthWrapper>
+      <Router>
+        <div className="min-h-screen flex flex-col bg-black text-white">
+          <Header />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/events/:date" element={<EventDate />} />
+              <Route path="/auth" element={<Auth />} />
+            </Routes>
+          </main>
+          <Footer handleDiscordJoin={handleDiscordJoin} />
+        </div>
+      </Router>
+    </AuthWrapper>
   );
 }
 
