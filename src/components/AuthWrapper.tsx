@@ -3,7 +3,7 @@ interface AuthWrapperProps {
 }
 
 function AuthWrapper({ children }: AuthWrapperProps): JSX.Element {
-  return <>{children}</>;
+  return children;
 }
 
 export default AuthWrapper;

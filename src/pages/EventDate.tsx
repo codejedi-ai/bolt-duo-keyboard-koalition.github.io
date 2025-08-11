@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, MapPin, ArrowLeft, Clock } from 'lucide-react';
+import { Calendar, MapPin, ArrowLeft, Clock, Users } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import eventsData from '../data/events.json';
@@ -22,21 +22,6 @@ interface TimeSlot {
 
 function EventDate(): JSX.Element {
   const { date } = useParams();
-  
-  if (!date) {
-    return (
-      <section className="max-w-6xl mx-auto py-16 px-4">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold mb-2">Invalid Date</h2>
-          <p className="text-gray-400">Please select a valid date from the calendar.</p>
-          <Link to="/events" className="text-primary hover:text-primary/80">
-            Back to Calendar
-          </Link>
-        </div>
-      </section>
-    );
-  }
-  
   const events = (eventsData as Event[]).filter(event => event.date === date);
   
   const formatDate = (dateStr: string): string => {
@@ -57,8 +42,8 @@ function EventDate(): JSX.Element {
     const eventTimes = events
       .filter(event => event.time)
       .map(event => {
-        const eventHour = parseInt(event.time!.split(':')[0]);
-        const eventAmPm = event.time!.includes('PM') ? 'PM' : 'AM';
+        const eventHour = parseInt(event.time.split(':')[0]);
+        const eventAmPm = event.time.includes('PM') ? 'PM' : 'AM';
         let eventHour24 = eventHour;
         if (eventAmPm === 'PM' && eventHour !== 12) eventHour24 += 12;
         if (eventAmPm === 'AM' && eventHour === 12) eventHour24 = 0;
@@ -83,8 +68,8 @@ function EventDate(): JSX.Element {
       // Find events for this hour
       const hourEvents = events.filter(event => {
         if (!event.time) return false;
-        const eventHour = parseInt(event.time!.split(':')[0]);
-        const eventAmPm = event.time!.includes('PM') ? 'PM' : 'AM';
+        const eventHour = parseInt(event.time.split(':')[0]);
+        const eventAmPm = event.time.includes('PM') ? 'PM' : 'AM';
         let eventHour24 = eventHour;
         if (eventAmPm === 'PM' && eventHour !== 12) eventHour24 += 12;
         if (eventAmPm === 'AM' && eventHour === 12) eventHour24 = 0;
@@ -189,7 +174,7 @@ function EventDate(): JSX.Element {
                   <h4 className="font-semibold text-white mb-2">{event.name}</h4>
                   <div className="flex items-center text-sm text-gray-400 mb-2">
                     <Clock className="w-4 h-4 mr-1" />
-                    {event.time ?? 'Time TBA'}
+                    {event.time || 'Time TBA'}
                   </div>
                   <div className="flex items-center text-sm text-gray-400 mb-2">
                     <MapPin className="w-4 h-4 mr-1" />

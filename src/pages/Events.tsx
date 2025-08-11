@@ -71,7 +71,7 @@ function Events(): JSX.Element {
       hours = '00';
     }
     if (modifier === 'PM') {
-      hours = (parseInt(hours, 10) + 12).toString();
+      hours = parseInt(hours, 10) + 12;
     }
     return `${hours}:${minutes}`;
   };
@@ -85,7 +85,7 @@ function Events(): JSX.Element {
         const eventDate = new Date(event.date);
         return eventDate >= today;
       })
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
       .slice(0, 3);
   };
 

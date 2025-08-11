@@ -45,7 +45,19 @@ function DashboardSidebar(): JSX.Element {
 
   return (
     <div className="w-64 bg-gray-900 border-r border-gray-800 min-h-screen flex flex-col">
-      
+      <div className="p-6 border-b border-gray-800">
+        <Link to="/dashboard" className="flex items-center">
+          <img
+            src="/images/logo_ngb.png"
+            alt="DKK Logo"
+            className="w-8 h-8 mr-3"
+          />
+          <span className="text-lg font-bold">
+            <span className="text-primary">DKK</span>
+            <span className="text-white"> Dashboard</span>
+          </span>
+        </Link>
+      </div>
 
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
