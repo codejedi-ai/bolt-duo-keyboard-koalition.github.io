@@ -8,7 +8,7 @@ function HeroContent() {
         <h1 className="flex flex-col lg:flex-row items-center text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight">
           {/* Logo */}
           <img
-            src="/logo.png"
+            src="/images/dkk-logo-removebg-preview.png"
             alt="DKK Logo"
             className="w-32 h-32 md:w-48 md:h-48 lg:w-52 lg:h-52 mb-4 lg:mb-0"
           />
