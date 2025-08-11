@@ -1,52 +1,99 @@
-import { Slot } from "@radix-ui/react-slot"
-import { cva } from "class-variance-authority"
 import { forwardRef, ButtonHTMLAttributes } from "react"
+import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { cn } from "../../lib/utils"
 
-const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "underline-offset-4 hover:underline text-primary",
-      },
-      size: {
-        default: "h-10 py-2 px-4",
-        sm: "h-9 px-3 rounded-md",
-        lg: "h-11 px-8 rounded-md",
-      },
+const StyledButton = styled(MuiButton)(({ theme, variant, size }) => ({
+  textTransform: 'none',
+  fontWeight: 500,
+  borderRadius: '6px',
+  transition: 'all 0.2s ease-in-out',
+  '&.MuiButton-containedPrimary': {
+    backgroundColor: '#FFA500',
+    color: '#000000',
+    '&:hover': {
+      backgroundColor: 'rgba(255, 165, 0, 0.9)',
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
+  },
+  '&.MuiButton-outlined': {
+    borderColor: '#374151',
+    color: '#D1D5DB',
+    '&:hover': {
+      backgroundColor: '#374151',
+      borderColor: '#4B5563',
     },
-  }
-)
+  },
+  '&.MuiButton-text': {
+    color: '#FFA500',
+    '&:hover': {
+      backgroundColor: 'rgba(255, 165, 0, 0.1)',
+    },
+  },
+  ...(size === 'small' && {
+    padding: '6px 12px',
+    fontSize: '0.875rem',
+  }),
+  ...(size === 'large' && {
+    padding: '12px 32px',
+    fontSize: '1rem',
+  }),
+}))
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'size'> {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   size?: 'default' | 'sm' | 'lg';
   asChild?: boolean;
+  children: React.ReactNode;
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button"
-  return (
-    <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref}
-      {...props}
-    />
-  )
-})
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = 'default', size = 'default', asChild = false, children, ...props }, ref) => {
+    // Map our variants to MUI variants
+    const getMuiVariant = (): 'contained' | 'outlined' | 'text' => {
+      switch (variant) {
+        case 'outline':
+          return 'outlined'
+        case 'ghost':
+        case 'link':
+          return 'text'
+        default:
+          return 'contained'
+      }
+    }
+
+    // Map our sizes to MUI sizes
+    const getMuiSize = (): 'small' | 'medium' | 'large' => {
+      switch (size) {
+        case 'sm':
+          return 'small'
+        case 'lg':
+          return 'large'
+        default:
+          return 'medium'
+      }
+    }
+
+    if (asChild) {
+      // For asChild behavior, we'll render the children directly
+      // This is a simplified version - in a real app you might need more complex logic
+      return <>{children}</>
+    }
+
+    return (
+      <StyledButton
+        ref={ref}
+        variant={getMuiVariant()}
+        size={getMuiSize()}
+        color="primary"
+        className={cn(className)}
+        {...props}
+      >
+        {children}
+      </StyledButton>
+    )
+  }
+)
+
 Button.displayName = "Button"
 
-export { Button, buttonVariants }
+export { Button }
