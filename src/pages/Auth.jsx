@@ -29,7 +29,7 @@ function Auth() {
   };
 
   return (
-    <section className="max-w-md mx-auto">
+    <section className="max-w-md mx-auto py-16 px-4">
       <Card className="bg-gray-900 border-gray-800">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center text-white">

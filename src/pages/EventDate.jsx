@@ -49,7 +49,7 @@ function EventDate() {
   const hourlySchedule = generateHourlySchedule();
 
   return (
-    <section className="max-w-6xl mx-auto">
+    <section className="max-w-6xl mx-auto py-16 px-4">
       <div className="mb-8">
         <Link 
           to="/events" 

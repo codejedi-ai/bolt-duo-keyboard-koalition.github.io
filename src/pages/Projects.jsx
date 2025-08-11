@@ -2,7 +2,7 @@ import projectsData from '../data/projects.json';
 
 function Projects() {
   return (
-    <section>
+    <section className="py-16 px-4">
       <h2 className="text-3xl font-bold mb-6">Our Projects</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projectsData.map((project, index) => (

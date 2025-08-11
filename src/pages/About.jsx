@@ -1,6 +1,6 @@
 function About() {
   return (
-    <section className="max-w-3xl mx-auto">
+    <section className="max-w-3xl mx-auto py-16 px-4">
       <h2 className="text-3xl font-bold mb-6">About the Duo Keyboard Koalition</h2>
       <div className="space-y-4 text-gray-300">
         <p>
