@@ -52,10 +52,6 @@ function DashboardSidebar(): JSX.Element {
             alt="DKK Logo"
             className="w-8 h-8 mr-3"
           />
-          <span className="text-lg font-bold">
-            <span className="text-primary">DKK</span>
-            <span className="text-white"> Dashboard</span>
-          </span>
         </Link>
       </div>
 
