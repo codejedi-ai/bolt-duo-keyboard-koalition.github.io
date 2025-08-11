@@ -86,7 +86,9 @@ function Auth() {
         <p className="text-gray-400">
           {isLogin ? 'Sign in to your account' : 'Create your account to get started'}
         </p>
+        <div className="mt-4">
 
+        </div>
       </div>
       
       {isLogin ? (
