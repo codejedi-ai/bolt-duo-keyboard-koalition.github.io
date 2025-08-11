@@ -1,33 +1,37 @@
-{
-  "name": "duo-keyboard-koalition",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@googlemaps/js-api-loader": "^1.16.8",
-    "@googlemaps/markerclusterer": "^2.5.1",
-    "@radix-ui/react-slot": "^1.1.0",
-    "@react-google-maps/api": "^2.20.3",
-    "@vis.gl/react-google-maps": "^1.3.0",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.460.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^6.28.0",
-    "tailwind-merge": "^2.5.4"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.0",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15",
-    "ts-node": "^10.9.2",
-    "vite": "^5.0.4"
-  }
-}
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+          colorDanger: '#EF4444',
+          colorSuccess: '#10B981',
+          colorWarning: '#F59E0B',
+          borderRadius: '0.375rem',
+          spacingUnit: '1rem'
+        },
+        elements: {
+          modalContent: "bg-gray-900 border border-gray-800",
+          modalCloseButton: "text-gray-400 hover:text-white",
+          card: "bg-gray-900 border border-gray-800 shadow-xl",
+          headerTitle: "text-white text-2xl font-bold",
+          headerSubtitle: "text-gray-400",
+          socialButtonsBlockButton: "bg-gray-800 border border-gray-700 text-white hover:bg-gray-700",
+          socialButtonsBlockButtonText: "text-white",
+          dividerLine: "bg-gray-700",
+          dividerText: "text-gray-400",
+          formFieldLabel: "text-gray-300",
+          formFieldInput: "bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-primary",
+          formButtonPrimary: "bg-primary hover:bg-primary/90 text-black font-medium",
+          footerActionText: "text-gray-400",
+          footerActionLink: "text-primary hover:text-primary/80",
+          identityPreviewText: "text-white",
+          identityPreviewEditButton: "text-primary hover:text-primary/80"
+        }
+      }}
+    >
+      <App />
+    </ClerkProvider>
+  </StrictMode>,
+)
