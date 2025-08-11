@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
+import UserDropdown from './UserDropdown';
 
 function Header() {
   return (
@@ -31,34 +32,7 @@ function Header() {
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <UserButton 
-                appearance={{
-                  baseTheme: undefined,
-                  variables: {
-                    colorPrimary: '#FFA500',
-                    colorBackground: '#111827',
-                    colorInputBackground: '#1F2937',
-                    colorInputText: '#FFFFFF',
-                    colorText: '#FFFFFF',
-                    colorTextSecondary: '#9CA3AF',
-                    colorNeutral: '#374151',
-                    colorDanger: '#EF4444',
-                    colorSuccess: '#10B981',
-                    colorWarning: '#F59E0B',
-                    borderRadius: '0.375rem',
-                    spacingUnit: '1rem'
-                  },
-                  elements: {
-                    avatarBox: "w-8 h-8 border-2 border-gray-700",
-                    userButtonPopoverCard: "bg-gray-900 border border-gray-700 shadow-xl",
-                    userButtonPopoverActions: "bg-gray-900",
-                    userButtonPopoverActionButton: "text-white hover:bg-gray-800 transition-colors",
-                    userButtonPopoverActionButtonText: "text-white",
-                    userButtonPopoverFooter: "bg-gray-900 border-t border-gray-700",
-                    userButtonPopoverActionButtonIcon: "text-gray-400"
-                  }
-                }}
-              />
+              <UserDropdown />
             </SignedIn>
           </div>
         </div>
