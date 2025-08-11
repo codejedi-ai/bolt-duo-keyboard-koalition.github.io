@@ -47,6 +47,7 @@ function JoinDiscord() {
             Learn More
           </Button>
         </div>
+        </div>
       </CardContent>
     </Card>
   )
