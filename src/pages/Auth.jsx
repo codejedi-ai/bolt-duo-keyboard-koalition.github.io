@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { clerk } from '../lib/clerk';
 
 function Auth() {
@@ -77,6 +76,7 @@ function Auth() {
   if (isSignedIn) {
     return null; // This will redirect to home
   }
+
   return (
     <section className="max-w-md mx-auto py-16 px-4">
       <div className="text-center mb-6">
