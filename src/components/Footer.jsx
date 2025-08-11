@@ -5,7 +5,7 @@ function Footer({ handleDiscordJoin }) {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-PjQ7yXSb2U4BqTmLgAhrHSc15WVDmA.png"
+              src="/images/logo_ngb.png"
               alt="DKK Logo"
               className="w-8 h-8 mr-2"
             />
