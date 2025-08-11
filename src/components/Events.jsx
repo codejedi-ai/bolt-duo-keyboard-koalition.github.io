@@ -1,20 +1,289 @@
+import { useState } from 'preact/hooks';
+import { ChevronLeft, ChevronRight, Calendar, MapPin, ExternalLink } from 'lucide-react';
+import { Card, CardContent } from "./ui/card";
+import { Button } from "./ui/button";
 import eventsData from '../data/events.json';
 
 function Events() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'list'
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(day);
+    }
+    
+    return days;
+  };
+
+  const getEventsForDate = (day) => {
+    if (!day) return [];
+    const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return eventsData.filter(event => event.date === dateStr);
+  };
+
+  const navigateMonth = (direction) => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(prev.getMonth() + direction);
+      return newDate;
+    });
+  };
+
+  const days = getDaysInMonth(currentDate);
+
   return (
-    <section>
-      <h2 className="text-3xl font-bold mb-6">Upcoming Events</h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {eventsData.map((event, index) => (
-          <div key={index} className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
-            <img src={event.image} alt={event.name} className="w-full h-48 object-cover" />
-            <div className="p-4">
-              <h3 className="text-xl font-bold mb-2">{event.name}</h3>
-              <p className="text-gray-400 mb-2">{event.date}</p>
-              <p className="text-gray-400">{event.description}</p>
-            </div>
+    <section className="max-w-6xl mx-auto">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8">
+        <div>
+          <h2 className="text-3xl font-bold mb-2">Events & Calendar</h2>
+          <p className="text-gray-400">
+            Stay updated with our latest hackathons, workshops, and community events.
+          </p>
+        </div>
+        
+        <div className="flex gap-2 mt-4 lg:mt-0">
+          <Button
+            variant={viewMode === 'calendar' ? 'default' : 'outline'}
+            onClick={() => setViewMode('calendar')}
+            className="bg-primary hover:bg-primary/90 text-black"
+          >
+            <Calendar className="w-4 h-4 mr-2" />
+            Calendar
+          </Button>
+          <Button
+            variant={viewMode === 'list' ? 'default' : 'outline'}
+            onClick={() => setViewMode('list')}
+            className={viewMode === 'list' ? 'bg-primary hover:bg-primary/90 text-black' : 'border-gray-600 text-gray-300 hover:bg-gray-800'}
+          >
+            List View
+          </Button>
+          <Button
+            variant="outline"
+            asChild
+            className="border-gray-600 text-gray-300 hover:bg-gray-800"
+          >
+            <a
+              href="https://app.getriver.io/beta/duo-keyboard-koalition"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="w-4 h-4 mr-2" />
+              DKK Events
+            </a>
+          </Button>
+        </div>
+      </div>
+
+      {viewMode === 'calendar' ? (
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Calendar */}
+          <div className="lg:col-span-2">
+            <Card className="bg-gray-900 border-gray-800">
+              <CardContent className="p-6">
+                {/* Calendar Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-white">
+                    {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                  </h3>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigateMonth(-1)}
+                      className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigateMonth(1)}
+                      className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Days of week header */}
+                <div className="grid grid-cols-7 gap-1 mb-2">
+                  {daysOfWeek.map(day => (
+                    <div key={day} className="p-2 text-center text-sm font-medium text-gray-400">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Calendar grid */}
+                <div className="grid grid-cols-7 gap-1">
+                  {days.map((day, index) => {
+                    const events = getEventsForDate(day);
+                    const hasEvents = events.length > 0;
+                    
+                    return (
+                      <div
+                        key={index}
+                        className={`
+                          min-h-[80px] p-2 border border-gray-800 rounded-md
+                          ${day ? 'bg-gray-800 hover:bg-gray-700 cursor-pointer' : 'bg-transparent'}
+                          ${hasEvents ? 'ring-2 ring-primary/50' : ''}
+                          transition-colors
+                        `}
+                      >
+                        {day && (
+                          <>
+                            <div className="text-sm text-white font-medium mb-1">{day}</div>
+                            {hasEvents && (
+                              <div className="space-y-1">
+                                {events.slice(0, 2).map((event, eventIndex) => (
+                                  <div
+                                    key={eventIndex}
+                                    className="text-xs bg-primary/20 text-primary px-1 py-0.5 rounded truncate"
+                                  >
+                                    {event.name}
+                                  </div>
+                                ))}
+                                {events.length > 2 && (
+                                  <div className="text-xs text-gray-400">
+                                    +{events.length - 2} more
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        ))}
+
+          {/* Upcoming Events Sidebar */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-white mb-4">Upcoming Events</h3>
+            {eventsData.slice(0, 3).map((event, index) => (
+              <Card key={index} className="bg-gray-900 border-gray-800">
+                <CardContent className="p-4">
+                  <h4 className="font-semibold text-white mb-2">{event.name}</h4>
+                  <div className="flex items-center text-sm text-gray-400 mb-2">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    {new Date(event.date).toLocaleDateString()}
+                  </div>
+                  <div className="flex items-center text-sm text-gray-400 mb-3">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    {event.location}
+                  </div>
+                  <p className="text-sm text-gray-300 mb-3">{event.description}</p>
+                  {event.registrationLink && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="w-full border-primary text-primary hover:bg-primary/20"
+                    >
+                      <a
+                        href={event.registrationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Register
+                      </a>
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* List View */
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {eventsData.map((event, index) => (
+            <Card key={index} className="bg-gray-900 border-gray-800 hover:border-primary/50 transition-colors">
+              <CardContent className="p-0">
+                <img src={event.image} alt={event.name} className="w-full h-48 object-cover rounded-t-lg" />
+                <div className="p-4">
+                  <h3 className="text-xl font-bold mb-2 text-white">{event.name}</h3>
+                  <div className="flex items-center text-sm text-gray-400 mb-2">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    {new Date(event.date).toLocaleDateString()}
+                  </div>
+                  <div className="flex items-center text-sm text-gray-400 mb-3">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    {event.location}
+                  </div>
+                  <p className="text-gray-300 mb-4">{event.description}</p>
+                  {event.registrationLink && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="w-full border-primary text-primary hover:bg-primary/20"
+                    >
+                      <a
+                        href={event.registrationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Register Now
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* Link to main events page */}
+      <div className="mt-12 text-center">
+        <Card className="bg-gray-900 border-gray-800">
+          <CardContent className="p-6">
+            <h3 className="text-xl font-semibold text-white mb-2">More Events</h3>
+            <p className="text-gray-400 mb-4">
+              Visit our main events platform for the complete schedule and registration.
+            </p>
+            <Button
+              asChild
+              className="bg-primary hover:bg-primary/90 text-black"
+            >
+              <a
+                href="https://app.getriver.io/beta/duo-keyboard-koalition"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Visit DKK Events Platform
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
