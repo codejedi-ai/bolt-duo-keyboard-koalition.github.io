@@ -1,10 +1,13 @@
+import Hero from './Hero'
 import { Code2, Users, Trophy, Rocket } from 'lucide-react'
 import { Card, CardContent } from "./ui/card"
 import JoinDiscord from './JoinDiscord'
 
 function Home() {
   return (
-    <section className="mb-16">
+    <>
+      <Hero />
+      <section className="mb-16">
       <div className="max-w-3xl mx-auto text-center mb-12">
         <h2 className="text-3xl font-bold mb-6">Welcome to the Koalition</h2>
         <p className="text-gray-400 text-lg">
@@ -48,6 +51,7 @@ function Home() {
 
       <JoinDiscord />
     </section>
+    </>
   )
 }
 
