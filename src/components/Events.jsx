@@ -43,7 +43,40 @@ function Events() {
   const getEventsForDate = (day) => {
     if (!day) return [];
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return eventsData.filter(event => event.date === dateStr);
+    return eventsData
+      .filter(event => event.date === dateStr)
+      .sort((a, b) => {
+        if (!a.time || !b.time) return 0;
+        // Convert time to 24-hour format for sorting
+        const timeA = convertTo24Hour(a.time);
+        const timeB = convertTo24Hour(b.time);
+        return timeA.localeCompare(timeB);
+      });
+  };
+
+  const convertTo24Hour = (time12h) => {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') {
+      hours = '00';
+    }
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return `${hours}:${minutes}`;
+  };
+
+  const getUpcomingEvents = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return eventsData
+      .filter(event => {
+        const eventDate = new Date(event.date);
+        return eventDate >= today;
+      })
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(0, 3);
   };
 
   const navigateMonth = (direction) => {
@@ -139,7 +172,7 @@ function Events() {
                     <div
                       key={index}
                       className={`
-                        min-h-[80px] p-2 border border-gray-800 rounded-md
+                        min-h-[100px] p-1 border border-gray-800 rounded-md
                         ${day ? 'bg-gray-800 hover:bg-gray-700 cursor-pointer' : 'bg-transparent'}
                         ${hasEvents ? 'ring-2 ring-primary/50' : ''}
                         transition-colors
@@ -150,22 +183,18 @@ function Events() {
                     >
                       {day && (
                         <>
-                          <div className="text-sm text-white font-medium mb-1">{day}</div>
+                          <div className="text-sm text-white font-medium mb-1 text-center">{day}</div>
                           {hasEvents && (
-                            <div className="space-y-1">
-                              {events.slice(0, 2).map((event, eventIndex) => (
+                            <div className="space-y-0.5">
+                              {events.map((event, eventIndex) => (
                                 <div
                                   key={eventIndex}
-                                  className="text-xs bg-primary/20 text-primary px-1 py-0.5 rounded truncate"
+                                  className="text-xs bg-primary/20 text-primary px-1 py-0.5 rounded text-center leading-tight"
+                                  title={event.name}
                                 >
-                                  {event.name}
+                                  {event.name.length > 15 ? event.name.substring(0, 15) + '...' : event.name}
                                 </div>
                               ))}
-                              {events.length > 2 && (
-                                <div className="text-xs text-gray-400">
-                                  +{events.length - 2} more
-                                </div>
-                              )}
                             </div>
                           )}
                         </>
@@ -183,7 +212,7 @@ function Events() {
           <h3 className="text-xl font-semibold text-white mb-4">
             {hoveredDate ? `Events on ${monthNames[currentDate.getMonth()]} ${hoveredDate}` : 'Upcoming Events'}
           </h3>
-          {(hoveredDate ? getEventsForDate(hoveredDate) : eventsData.slice(0, 3)).map((event, index) => (
+          {(hoveredDate ? getEventsForDate(hoveredDate) : getUpcomingEvents()).map((event, index) => (
             <Card key={index} className="bg-gray-900 border-gray-800">
               <CardContent className="p-4">
                 <h4 className="font-semibold text-white mb-2">{event.name}</h4>
