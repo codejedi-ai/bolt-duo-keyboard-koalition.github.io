@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import { Link } from 'react-router-dom';
-import { clerk } from '../lib/clerk';
+import { clerk, getSignInUrl } from '../lib/clerk';
 
 function AuthButton() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -24,13 +23,17 @@ function AuthButton() {
     return null; // UserButton will be shown instead
   }
 
+  const handleSignIn = () => {
+    window.location.href = getSignInUrl();
+  };
+
   return (
-    <Link 
-      to="/auth" 
+    <button 
+      onClick={handleSignIn}
       className="px-4 py-2 bg-primary text-black rounded-md hover:bg-primary/90 transition-all duration-200 font-medium"
     >
       Login
-    </Link>
+    </button>
   );
 }
 

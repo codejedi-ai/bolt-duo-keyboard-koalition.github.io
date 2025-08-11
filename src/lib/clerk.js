@@ -19,18 +19,6 @@ export const initializeClerk = async () => {
           colorBackground: '#111827',
           colorInputBackground: '#1F2937',
           colorInputText: '#FFFFFF',
-        },
-        elements: {
-          formButtonPrimary: 'bg-primary hover:bg-primary/90 text-black font-medium',
-          card: 'bg-gray-900 border-gray-800 shadow-xl',
-          headerTitle: 'text-white text-2xl',
-          headerSubtitle: 'text-gray-400',
-          socialButtonsBlockButton: 'border-gray-700 text-gray-300 hover:bg-gray-800',
-          formFieldLabel: 'text-gray-300',
-          formFieldInput: 'bg-gray-800 border-gray-700 text-white focus:ring-primary focus:border-primary',
-          footerActionLink: 'text-primary hover:text-primary/80',
-          dividerLine: 'bg-gray-700',
-          dividerText: 'text-gray-400',
         }
       }
     });
@@ -39,4 +27,17 @@ export const initializeClerk = async () => {
     console.error('Failed to initialize Clerk:', error);
     throw error;
   }
+};
+
+// Account Portal URLs
+export const getSignInUrl = (redirectUrl = window.location.origin) => {
+  return `https://regular-fox-83.accounts.dev/sign-in?redirect_url=${encodeURIComponent(redirectUrl)}`;
+};
+
+export const getSignUpUrl = (redirectUrl = window.location.origin) => {
+  return `https://regular-fox-83.accounts.dev/sign-up?redirect_url=${encodeURIComponent(redirectUrl)}`;
+};
+
+export const getUserProfileUrl = (redirectUrl = window.location.origin) => {
+  return `https://regular-fox-83.accounts.dev/user?redirect_url=${encodeURIComponent(redirectUrl)}`;
 };
