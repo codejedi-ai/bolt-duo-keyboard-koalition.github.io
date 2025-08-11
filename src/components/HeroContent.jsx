@@ -13,7 +13,7 @@ function HeroContent() {
             className="w-32 h-32 md:w-48 md:h-48 lg:w-52 lg:h-52 mb-4 xl:mb-0"
           />
           <div className="xl:ml-6 flex flex-col items-center xl:items-start">
-            <span className="text-primary">DUO KEYBOARD</span>
+            <span className="text-primary">DUO KEYBOARD </span>
             <span className="text-white">KOALITION</span>
           </div>
         </h1>
