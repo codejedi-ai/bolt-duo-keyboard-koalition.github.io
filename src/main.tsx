@@ -8,17 +8,18 @@ import AuthWrapper from './components/AuthWrapper'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import DashboardLayout from './components/DashboardLayout'
+import ProtectedLayout from './pages/protected/Layout'
 import Home from './pages/Home'
 import About from './pages/About'
-import Dashboard from './pages/Dashboard'
-import MyProjects from './pages/MyProjects'
-import MyNetwork from './pages/MyNetwork'
-import MyRSVPEvents from './pages/MyRSVPEvents'
 import Projects from './pages/Projects'
 import Events from './pages/Events'
 import EventDate from './pages/EventDate'
 import Auth from './pages/Auth'
-import Profile from './pages/Profile'
+import Dashboard from './pages/protected/Dashboard'
+import MyProjects from './pages/protected/MyProjects'
+import MyNetwork from './pages/protected/MyNetwork'
+import MyRSVPEvents from './pages/protected/MyRSVPEvents'
+import Profile from './pages/protected/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
 import './index.css'
 
@@ -53,11 +54,11 @@ function AppRoutes(): JSX.Element {
   };
 
   // Protected routes with dashboard layout
-  const ProtectedDashboardRoute = ({ children }: { children: React.ReactNode }) => (
+  const ProtectedRouteWrapper = ({ children }: { children: React.ReactNode }) => (
     <ProtectedRoute>
-      <DashboardLayout>
+      <ProtectedLayout>
         {children}
-      </DashboardLayout>
+      </ProtectedLayout>
     </ProtectedRoute>
   );
 
@@ -87,27 +88,23 @@ function AppRoutes(): JSX.Element {
           {/* Protected Dashboard Routes */}
           <Route 
             path="/dashboard" 
-            element={<ProtectedDashboardRoute><Dashboard /></ProtectedDashboardRoute>} 
+            element={<ProtectedRouteWrapper><Dashboard /></ProtectedRouteWrapper>} 
           />
           <Route 
             path="/my-projects" 
-            element={<ProtectedDashboardRoute><MyProjects /></ProtectedDashboardRoute>} 
+            element={<ProtectedRouteWrapper><MyProjects /></ProtectedRouteWrapper>} 
           />
           <Route 
             path="/my-network" 
-            element={<ProtectedDashboardRoute><MyNetwork /></ProtectedDashboardRoute>} 
-          />
-          <Route 
-            path="/my-network" 
-            element={<ProtectedDashboardRoute><MyNetwork /></ProtectedDashboardRoute>} 
+            element={<ProtectedRouteWrapper><MyNetwork /></ProtectedRouteWrapper>} 
           />
           <Route 
             path="/my-rsvp-events" 
-            element={<ProtectedDashboardRoute><MyRSVPEvents /></ProtectedDashboardRoute>} 
+            element={<ProtectedRouteWrapper><MyRSVPEvents /></ProtectedRouteWrapper>} 
           />
           <Route 
             path="/profile" 
-            element={<ProtectedDashboardRoute><Profile /></ProtectedDashboardRoute>} 
+            element={<ProtectedRouteWrapper><Profile /></ProtectedRouteWrapper>} 
           />
         </Routes>
       </Router>

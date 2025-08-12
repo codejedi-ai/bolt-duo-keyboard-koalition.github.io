@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { Calendar, MapPin, Clock, Users, X, CheckCircle } from 'lucide-react';
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 
 interface RSVPEvent {
   id: string;
