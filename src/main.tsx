@@ -98,6 +98,10 @@ function AppRoutes(): JSX.Element {
             element={<ProtectedDashboardRoute><MyNetwork /></ProtectedDashboardRoute>} 
           />
           <Route 
+            path="/my-network" 
+            element={<ProtectedDashboardRoute><MyNetwork /></ProtectedDashboardRoute>} 
+          />
+          <Route 
             path="/my-rsvp-events" 
             element={<ProtectedDashboardRoute><MyRSVPEvents /></ProtectedDashboardRoute>} 
           />
