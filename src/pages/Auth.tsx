@@ -34,6 +34,7 @@ function Auth(): JSX.Element {
       <div className="flex justify-center">
         {isSignUp ? (
           <SignUp 
+            forceRedirectUrl="/dashboard"
             appearance={{
               baseTheme: undefined,
               variables: {
@@ -70,6 +71,7 @@ function Auth(): JSX.Element {
           />
         ) : (
           <SignIn 
+            forceRedirectUrl="/dashboard"
             appearance={{
               baseTheme: undefined,
               variables: {
