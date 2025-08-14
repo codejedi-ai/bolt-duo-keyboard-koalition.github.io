@@ -7,11 +7,11 @@ import {
   User,
   LogOut
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useClerk } from '@clerk/clerk-react';
 
 function DashboardSidebar(): JSX.Element {
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut } = useClerk();
 
   const sidebarItems = [
     {
@@ -72,10 +72,7 @@ function DashboardSidebar(): JSX.Element {
 
       <div className="p-4 border-t border-gray-800">
         <button
-          onClick={() => {
-            signOut();
-            window.location.href = '/';
-          }}
+          onClick={() => signOut()}
           className="flex items-center w-full px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-red-400 rounded-lg transition-colors"
         >
           <LogOut className="w-5 h-5 mr-3" />

@@ -1,39 +1,8 @@
+import { SignIn, SignUp } from '@clerk/clerk-react';
 import { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
 
 function Auth(): JSX.Element {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
-  const { signIn, signUp } = useAuth();
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      if (isSignUp) {
-        await signUp(email, password, firstName, lastName);
-      } else {
-        await signIn(email, password);
-      }
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Authentication failed');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <section className="max-w-md mx-auto py-16 px-4">
@@ -62,82 +31,83 @@ function Auth(): JSX.Element {
         </div>
       </div>
 
-      <Card className="bg-gray-900 border-gray-800">
-        <CardContent className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="p-3 bg-red-900/50 border border-red-700 rounded-md text-red-300 text-sm">
-                {error}
-              </div>
-            )}
-            
-            {isSignUp && (
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                    placeholder="John"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                    placeholder="Doe"
-                  />
-                </div>
-              </div>
-            )}
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                placeholder="john@example.com"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                placeholder="••••••••"
-              />
-            </div>
-            
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary hover:bg-primary/90 text-black font-medium"
-            >
-              {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Sign In')}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+      <div className="flex justify-center">
+        {isSignUp ? (
+          <SignUp 
+            forceRedirectUrl="/dashboard"
+            appearance={{
+              baseTheme: undefined,
+              variables: {
+                colorPrimary: '#FFA500',
+                colorBackground: '#111827',
+                colorInputBackground: '#1F2937',
+                colorInputText: '#FFFFFF',
+                colorText: '#FFFFFF',
+                colorTextSecondary: '#9CA3AF',
+                colorNeutral: '#374151',
+                colorDanger: '#EF4444',
+                colorSuccess: '#10B981',
+                colorWarning: '#F59E0B',
+                borderRadius: '0.375rem',
+                spacingUnit: '1rem'
+              },
+              elements: {
+                card: "bg-gray-900 border border-gray-800 shadow-xl",
+                headerTitle: "text-white text-2xl font-bold",
+                headerSubtitle: "text-gray-400",
+                socialButtonsBlockButton: "bg-gray-800 border border-gray-700 text-white hover:bg-gray-700",
+                socialButtonsBlockButtonText: "text-white",
+                dividerLine: "bg-gray-700",
+                dividerText: "text-gray-400",
+                formFieldLabel: "text-gray-300",
+                formFieldInput: "bg-gray-800 border border-gray-700 text-white placeholder-gray-500",
+                formButtonPrimary: "bg-primary hover:bg-primary/90 text-black font-medium",
+                footerActionText: "text-gray-400",
+                footerActionLink: "text-primary hover:text-primary/80",
+                identityPreviewText: "text-white",
+                identityPreviewEditButton: "text-primary hover:text-primary/80"
+              }
+            }}
+          />
+        ) : (
+          <SignIn 
+            forceRedirectUrl="/dashboard"
+            appearance={{
+              baseTheme: undefined,
+              variables: {
+                colorPrimary: '#FFA500',
+                colorBackground: '#111827',
+                colorInputBackground: '#1F2937',
+                colorInputText: '#FFFFFF',
+                colorText: '#FFFFFF',
+                colorTextSecondary: '#9CA3AF',
+                colorNeutral: '#374151',
+                colorDanger: '#EF4444',
+                colorSuccess: '#10B981',
+                colorWarning: '#F59E0B',
+                borderRadius: '0.375rem',
+                spacingUnit: '1rem'
+              },
+              elements: {
+                card: "bg-gray-900 border border-gray-800 shadow-xl",
+                headerTitle: "text-white text-2xl font-bold",
+                headerSubtitle: "text-gray-400",
+                socialButtonsBlockButton: "bg-gray-800 border border-gray-700 text-white hover:bg-gray-700",
+                socialButtonsBlockButtonText: "text-white",
+                dividerLine: "bg-gray-700",
+                dividerText: "text-gray-400",
+                formFieldLabel: "text-gray-300",
+                formFieldInput: "bg-gray-800 border border-gray-700 text-white placeholder-gray-500",
+                formButtonPrimary: "bg-primary hover:bg-primary/90 text-black font-medium",
+                footerActionText: "text-gray-400",
+                footerActionLink: "text-primary hover:text-primary/80",
+                identityPreviewText: "text-white",
+                identityPreviewEditButton: "text-primary hover:text-primary/80"
+              }
+            }}
+          />
+        )}
+      </div>
     </section>
   );
 }
