@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
-import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
+import { useAuth } from '../contexts/AuthContext';
 import UserDropdown from './UserDropdown';
 
 function Header(): JSX.Element {
+  const { isSignedIn } = useAuth();
+
   return (
     <header className="bg-black border-b border-gray-800">
       <nav className="container mx-auto px-4 py-4">
@@ -20,21 +22,22 @@ function Header(): JSX.Element {
           </Link>
           
           <div className="flex items-center gap-6">
-            <SignedOut>
+            {!isSignedIn && (
               <Link to="/about" className="text-white hover:text-primary transition-colors">About</Link>
-            </SignedOut>
+            )}
             <Link to="/projects" className="text-white hover:text-primary transition-colors">Projects</Link>
             <Link to="/events" className="text-white hover:text-primary transition-colors">Events</Link>
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button className="px-4 py-2 bg-primary text-black rounded-md hover:bg-primary/90 transition-all duration-200 font-medium">
-                  Login
-                </button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
+            {!isSignedIn && (
+              <Link 
+                to="/auth"
+                className="px-4 py-2 bg-primary text-black rounded-md hover:bg-primary/90 transition-all duration-200 font-medium"
+              >
+                Login
+              </Link>
+            )}
+            {isSignedIn && (
               <UserDropdown />
-            </SignedIn>
+            )}
           </div>
         </div>
       </nav>

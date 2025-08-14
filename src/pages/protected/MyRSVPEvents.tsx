@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
+import { useAuth } from '../../contexts/AuthContext';
 import { Calendar, MapPin, Clock, Users, X, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
@@ -19,7 +19,7 @@ interface RSVPEvent {
 }
 
 function MyRSVPEvents(): JSX.Element {
-  const { user } = useUser();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
 
   // Mock RSVP data - in real app this would come from your backend

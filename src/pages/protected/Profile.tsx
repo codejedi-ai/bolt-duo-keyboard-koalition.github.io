@@ -1,6 +1,11 @@
-import { UserProfile } from '@clerk/clerk-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { Card, CardContent } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { User, Mail, Calendar } from 'lucide-react';
 
 function Profile(): JSX.Element {
+  const { user } = useAuth();
+
   return (
     <div className="p-8">
       <div className="mb-8">
@@ -10,56 +15,76 @@ function Profile(): JSX.Element {
         </p>
       </div>
       
-      <div className="w-full max-w-4xl">
-        <UserProfile 
-          appearance={{
-            baseTheme: undefined,
-            variables: {
-              colorPrimary: '#FFA500',
-              colorBackground: '#111827',
-              colorInputBackground: '#1F2937',
-              colorInputText: '#FFFFFF',
-              colorText: '#FFFFFF',
-              colorTextSecondary: '#9CA3AF',
-              colorNeutral: '#374151',
-              colorDanger: '#EF4444',
-              colorSuccess: '#10B981',
-              colorWarning: '#F59E0B',
-              borderRadius: '0.375rem',
-              spacingUnit: '1rem'
-            },
-            elements: {
-              card: "bg-gray-900 border border-gray-800 shadow-xl",
-              headerTitle: "text-white text-2xl font-bold",
-              headerSubtitle: "text-gray-400",
-              socialButtonsBlockButton: "bg-gray-800 border border-gray-700 text-white hover:bg-gray-700",
-              socialButtonsBlockButtonText: "text-white",
-              dividerLine: "bg-gray-700",
-              dividerText: "text-gray-400",
-              formFieldLabel: "text-gray-300",
-              formFieldInput: "bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-primary",
-              formButtonPrimary: "bg-primary hover:bg-primary/90 text-black font-medium",
-              footerActionText: "text-gray-400",
-              footerActionLink: "text-primary hover:text-primary/80",
-              identityPreviewText: "text-white",
-              identityPreviewEditButton: "text-primary hover:text-primary/80",
-              navbar: "bg-gray-800 border-gray-700",
-              navbarButton: "text-gray-300 hover:text-white hover:bg-gray-700",
-              navbarButtonIcon: "text-gray-400",
-              pageScrollBox: "bg-gray-900",
-              page: "bg-gray-900",
-              profileSectionTitle: "text-white",
-              profileSectionContent: "bg-gray-800 border-gray-700",
-              badge: "bg-primary/20 text-primary",
-              accordionTriggerButton: "text-white hover:bg-gray-800",
-              accordionContent: "bg-gray-800",
-              tableHead: "bg-gray-800 text-gray-300",
-              tableBody: "bg-gray-900",
-              tableCell: "border-gray-700 text-gray-300"
-            }
-          }}
-        />
-      </div>
+      <Card className="bg-gray-900 border-gray-800 max-w-2xl">
+        <CardContent className="p-6">
+          <div className="flex items-center mb-6">
+            {user?.imageUrl ? (
+              <img
+                src={user.imageUrl}
+                alt={user.firstName || 'User'}
+                className="w-20 h-20 rounded-full object-cover mr-6"
+              />
+            ) : (
+              <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mr-6">
+                <User className="w-10 h-10 text-black" />
+              </div>
+            )}
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                {user?.firstName} {user?.lastName}
+              </h2>
+              <div className="flex items-center text-gray-400 mb-2">
+                <Mail className="w-4 h-4 mr-2" />
+                {user?.email}
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                First Name
+              </label>
+              <input
+                type="text"
+                value={user?.firstName || ''}
+                className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white"
+                readOnly
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Last Name
+              </label>
+              <input
+                type="text"
+                value={user?.lastName || ''}
+                className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white"
+                readOnly
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={user?.email || ''}
+                className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white"
+                readOnly
+              />
+            </div>
+          </div>
+          
+          <div className="mt-6">
+            <Button className="bg-primary hover:bg-primary/90 text-black">
+              Edit Profile
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

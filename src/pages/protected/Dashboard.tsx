@@ -1,11 +1,11 @@
-import { useUser } from '@clerk/clerk-react';
+import { useAuth } from '../../contexts/AuthContext';
 import { Code2, Users, Trophy, Rocket, Calendar, Plus, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Link } from 'react-router-dom';
 
 function Dashboard(): JSX.Element {
-  const { user } = useUser();
+  const { user } = useAuth();
 
   const stats = [
     { label: 'Projects', value: '3', icon: Code2, color: 'text-blue-400' },

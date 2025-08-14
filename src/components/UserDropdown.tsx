@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { useUser, useClerk } from '@clerk/clerk-react';
+import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { User, LogOut, Settings, ChevronDown } from 'lucide-react';
 
 function UserDropdown(): JSX.Element | null {
-  const { user } = useUser();
-  const { signOut } = useClerk();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -25,6 +24,7 @@ function UserDropdown(): JSX.Element | null {
 
   const handleSignOut = () => {
     signOut();
+    navigate('/');
     setIsOpen(false);
   };
 
@@ -45,12 +45,12 @@ function UserDropdown(): JSX.Element | null {
         ) : (
           <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
             <span className="text-black font-semibold text-sm">
-              {user.firstName?.charAt(0) || user.emailAddresses[0]?.emailAddress.charAt(0) || 'U'}
+              {user.firstName?.charAt(0) || user.email?.charAt(0) || 'U'}
             </span>
           </div>
         )}
         <span className="text-sm font-medium">
-          {user.firstName || user.emailAddresses[0]?.emailAddress.split('@')[0]}
+          {user.firstName || user.email?.split('@')[0]}
         </span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -63,7 +63,7 @@ function UserDropdown(): JSX.Element | null {
                 {user.firstName} {user.lastName}
               </p>
               <p className="text-xs text-gray-400">
-                {user.emailAddresses[0]?.emailAddress}
+                {user.email}
               </p>
             </div>
             
