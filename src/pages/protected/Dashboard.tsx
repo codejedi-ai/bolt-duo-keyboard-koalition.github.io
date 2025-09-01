@@ -1,11 +1,11 @@
-import { useUser } from '@clerk/clerk-react';
+import { useAuth } from '../../components/AuthProvider';
 import { Code2, Users, Trophy, Rocket, Calendar, Plus, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Link } from 'react-router-dom';
 
 function Dashboard(): JSX.Element {
-  const { user } = useUser();
+  const { user } = useAuth();
 
   const stats = [
     { label: 'Projects', value: '3', icon: Code2, color: 'text-blue-400' },
@@ -25,7 +25,7 @@ function Dashboard(): JSX.Element {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">
-          Welcome back, <span className="text-primary">{user?.firstName || 'Champion'}</span>!
+          Welcome back, <span className="text-primary">{user?.first_name || 'Champion'}</span>!
         </h1>
         <p className="text-gray-400">
           Here's what's happening in your Koalition journey today.

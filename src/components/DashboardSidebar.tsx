@@ -7,11 +7,13 @@ import {
   User,
   LogOut
 } from 'lucide-react';
-import { useClerk } from '@clerk/clerk-react';
+import { useAuth } from './AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 function DashboardSidebar(): JSX.Element {
   const location = useLocation();
-  const { signOut } = useClerk();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const sidebarItems = [
     {
@@ -43,6 +45,11 @@ function DashboardSidebar(): JSX.Element {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const handleSignOut = async () => {
+    await logout();
+    navigate('/');
+  };
+
   return (
     <div className="w-64 bg-gray-900 border-r border-gray-800 min-h-screen flex flex-col">
       <nav className="flex-1 p-4">
@@ -72,7 +79,7 @@ function DashboardSidebar(): JSX.Element {
 
       <div className="p-4 border-t border-gray-800">
         <button
-          onClick={() => signOut()}
+          onClick={handleSignOut}
           className="flex items-center w-full px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-red-400 rounded-lg transition-colors"
         >
           <LogOut className="w-5 h-5 mr-3" />

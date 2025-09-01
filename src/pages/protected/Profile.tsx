@@ -1,6 +1,50 @@
-import { UserProfile } from '@clerk/clerk-react';
+import { useState } from 'react';
+import { useAuth } from '../../components/AuthProvider';
+import { Card, CardContent } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { User, Save } from 'lucide-react';
 
 function Profile(): JSX.Element {
+  const { user, updateProfile } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    username: user?.username || '',
+    first_name: user?.first_name || '',
+    last_name: user?.last_name || '',
+    bio: user?.bio || '',
+    skills: user?.skills?.join(', ') || '',
+    github_url: user?.github_url || '',
+    linkedin_url: user?.linkedin_url || ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
+
+    try {
+      const updates = {
+        ...formData,
+        skills: formData.skills.split(',').map(s => s.trim()).filter(s => s)
+      };
+
+      const result = await updateProfile(updates);
+      
+      if (result.success) {
+        setMessage('Profile updated successfully!');
+        setIsEditing(false);
+      } else {
+        setMessage(result.error || 'Failed to update profile');
+      }
+    } catch (error) {
+      setMessage('An error occurred while updating your profile');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="p-8">
       <div className="mb-8">
@@ -10,55 +54,165 @@ function Profile(): JSX.Element {
         </p>
       </div>
       
-      <div className="w-full max-w-4xl">
-        <UserProfile 
-          appearance={{
-            baseTheme: undefined,
-            variables: {
-              colorPrimary: '#FFA500',
-              colorBackground: '#111827',
-              colorInputBackground: '#1F2937',
-              colorInputText: '#FFFFFF',
-              colorText: '#FFFFFF',
-              colorTextSecondary: '#9CA3AF',
-              colorNeutral: '#374151',
-              colorDanger: '#EF4444',
-              colorSuccess: '#10B981',
-              colorWarning: '#F59E0B',
-              borderRadius: '0.375rem',
-              spacingUnit: '1rem'
-            },
-            elements: {
-              card: "bg-gray-900 border border-gray-800 shadow-xl",
-              headerTitle: "text-white text-2xl font-bold",
-              headerSubtitle: "text-gray-400",
-              socialButtonsBlockButton: "bg-gray-800 border border-gray-700 text-white hover:bg-gray-700",
-              socialButtonsBlockButtonText: "text-white",
-              dividerLine: "bg-gray-700",
-              dividerText: "text-gray-400",
-              formFieldLabel: "text-gray-300",
-              formFieldInput: "bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-primary",
-              formButtonPrimary: "bg-primary hover:bg-primary/90 text-black font-medium",
-              footerActionText: "text-gray-400",
-              footerActionLink: "text-primary hover:text-primary/80",
-              identityPreviewText: "text-white",
-              identityPreviewEditButton: "text-primary hover:text-primary/80",
-              navbar: "bg-gray-800 border-gray-700",
-              navbarButton: "text-gray-300 hover:text-white hover:bg-gray-700",
-              navbarButtonIcon: "text-gray-400",
-              pageScrollBox: "bg-gray-900",
-              page: "bg-gray-900",
-              profileSectionTitle: "text-white",
-              profileSectionContent: "bg-gray-800 border-gray-700",
-              badge: "bg-primary/20 text-primary",
-              accordionTriggerButton: "text-white hover:bg-gray-800",
-              accordionContent: "bg-gray-800",
-              tableHead: "bg-gray-800 text-gray-300",
-              tableBody: "bg-gray-900",
-              tableCell: "border-gray-700 text-gray-300"
-            }
-          }}
-        />
+      <div className="max-w-2xl">
+        <Card className="bg-gray-900 border-gray-800">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <User className="w-6 h-6 text-primary mr-3" />
+                <h2 className="text-xl font-bold text-white">Profile Information</h2>
+              </div>
+              <Button
+                onClick={() => setIsEditing(!isEditing)}
+                variant="outline"
+                className="border-gray-600 text-gray-300 hover:bg-gray-800"
+              >
+                {isEditing ? 'Cancel' : 'Edit Profile'}
+              </Button>
+            </div>
+
+            {message && (
+              <div className={`px-4 py-3 rounded-md mb-4 ${
+                message.includes('success') 
+                  ? 'bg-green-500/20 border border-green-500 text-green-400'
+                  : 'bg-red-500/20 border border-red-500 text-red-400'
+              }`}>
+                {message}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={user?.email || ''}
+                    disabled
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-gray-400 cursor-not-allowed"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                    disabled={!isEditing}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+                    placeholder="Choose a username"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.first_name}
+                    onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                    disabled={!isEditing}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+                    placeholder="First name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.last_name}
+                    onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                    disabled={!isEditing}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+                    placeholder="Last name"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Bio
+                </label>
+                <textarea
+                  value={formData.bio}
+                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                  disabled={!isEditing}
+                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed h-24"
+                  placeholder="Tell us about yourself"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Skills (comma separated)
+                </label>
+                <input
+                  type="text"
+                  value={formData.skills}
+                  onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+                  disabled={!isEditing}
+                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+                  placeholder="React, TypeScript, Node.js"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    GitHub URL
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.github_url}
+                    onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
+                    disabled={!isEditing}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+                    placeholder="https://github.com/username"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    LinkedIn URL
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.linkedin_url}
+                    onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
+                    disabled={!isEditing}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+                    placeholder="https://linkedin.com/in/username"
+                  />
+                </div>
+              </div>
+
+              {isEditing && (
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="bg-primary hover:bg-primary/90 text-black"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    {isLoading ? 'Saving...' : 'Save Changes'}
+                  </Button>
+                </div>
+              )}
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

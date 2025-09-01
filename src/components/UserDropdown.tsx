@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { useUser, useClerk } from '@clerk/clerk-react';
+import { useAuth } from './AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { User, LogOut, Settings, ChevronDown } from 'lucide-react';
 
 function UserDropdown(): JSX.Element | null {
-  const { user } = useUser();
-  const { signOut } = useClerk();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -23,8 +22,9 @@ function UserDropdown(): JSX.Element | null {
     };
   }, []);
 
-  const handleSignOut = () => {
-    signOut();
+  const handleSignOut = async () => {
+    await logout();
+    navigate('/');
     setIsOpen(false);
   };
 
@@ -36,21 +36,21 @@ function UserDropdown(): JSX.Element | null {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 text-white hover:text-primary transition-colors rounded-md hover:bg-gray-800"
       >
-        {user.imageUrl ? (
+        {user.avatar_url ? (
           <img
-            src={user.imageUrl}
-            alt={user.firstName || 'User'}
+            src={user.avatar_url}
+            alt={user.first_name || 'User'}
             className="w-8 h-8 rounded-full object-cover"
           />
         ) : (
           <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
             <span className="text-black font-semibold text-sm">
-              {user.firstName?.charAt(0) || user.emailAddresses[0]?.emailAddress.charAt(0) || 'U'}
+              {user.first_name?.charAt(0) || user.email.charAt(0) || 'U'}
             </span>
           </div>
         )}
         <span className="text-sm font-medium">
-          {user.firstName || user.emailAddresses[0]?.emailAddress.split('@')[0]}
+          {user.first_name || user.username || user.email.split('@')[0]}
         </span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -60,10 +60,10 @@ function UserDropdown(): JSX.Element | null {
           <div className="py-1">
             <div className="px-4 py-3 border-b border-gray-700">
               <p className="text-sm font-medium text-white">
-                {user.firstName} {user.lastName}
+                {user.first_name} {user.last_name}
               </p>
               <p className="text-xs text-gray-400">
-                {user.emailAddresses[0]?.emailAddress}
+                {user.email}
               </p>
             </div>
             

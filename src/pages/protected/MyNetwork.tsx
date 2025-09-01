@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
+import { useAuth } from '../../components/AuthProvider';
 import { Users, UserPlus, MessageCircle, Github, Linkedin, Search, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
@@ -18,7 +18,7 @@ interface NetworkMember {
 }
 
 function MyNetwork(): JSX.Element {
-  const { user } = useUser();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'connections' | 'discover'>('connections');
 
