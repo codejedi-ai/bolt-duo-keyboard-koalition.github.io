@@ -1,10 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './components/AuthProvider'
+import { ClerkProvider } from '@clerk/clerk-react'
+import { useUser } from '@clerk/clerk-react'
 import App from './App.tsx'
+import AuthWrapper from './components/AuthWrapper'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import DashboardLayout from './components/DashboardLayout'
 import ProtectedLayout from './pages/protected/Layout'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -20,8 +23,14 @@ import Profile from './pages/protected/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
 import './index.css'
 
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Clerk Publishable Key")
+}
+
 function AppRoutes(): JSX.Element {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isSignedIn, isLoaded } = useUser();
 
   const handleDiscordJoin = () => {
     window.open('https://discord.gg/6GaWZAawUc', '_blank');
@@ -29,7 +38,7 @@ function AppRoutes(): JSX.Element {
 
   // Redirect authenticated users from home to dashboard
   const HomeRoute = () => {
-    if (isLoading) {
+    if (!isLoaded) {
       return (
         <div className="flex items-center justify-center min-h-screen">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
@@ -37,7 +46,7 @@ function AppRoutes(): JSX.Element {
       );
     }
     
-    if (isAuthenticated) {
+    if (isSignedIn) {
       return <Navigate to="/dashboard" replace />;
     }
     
@@ -65,46 +74,88 @@ function AppRoutes(): JSX.Element {
   );
 
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<PublicLayout><HomeRoute /></PublicLayout>} />
-        <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-        <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
-        <Route path="/events" element={<PublicLayout><Events /></PublicLayout>} />
-        <Route path="/events/:date" element={<PublicLayout><EventDate /></PublicLayout>} />
-        <Route path="/auth" element={<PublicLayout><Auth /></PublicLayout>} />
+    <AuthWrapper>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<PublicLayout><HomeRoute /></PublicLayout>} />
+          <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+          <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
+          <Route path="/events" element={<PublicLayout><Events /></PublicLayout>} />
+          <Route path="/events/:date" element={<PublicLayout><EventDate /></PublicLayout>} />
+          <Route path="/auth" element={<PublicLayout><Auth /></PublicLayout>} />
 
-        {/* Protected Dashboard Routes */}
-        <Route 
-          path="/dashboard" 
-          element={<ProtectedRouteWrapper><Dashboard /></ProtectedRouteWrapper>} 
-        />
-        <Route 
-          path="/my-projects" 
-          element={<ProtectedRouteWrapper><MyProjects /></ProtectedRouteWrapper>} 
-        />
-        <Route 
-          path="/my-network" 
-          element={<ProtectedRouteWrapper><MyNetwork /></ProtectedRouteWrapper>} 
-        />
-        <Route 
-          path="/my-rsvp-events" 
-          element={<ProtectedRouteWrapper><MyRSVPEvents /></ProtectedRouteWrapper>} 
-        />
-        <Route 
-          path="/profile" 
-          element={<ProtectedRouteWrapper><Profile /></ProtectedRouteWrapper>} 
-        />
-      </Routes>
-    </Router>
+          {/* Protected Dashboard Routes */}
+          <Route 
+            path="/dashboard" 
+            element={<ProtectedRouteWrapper><Dashboard /></ProtectedRouteWrapper>} 
+          />
+          <Route 
+            path="/my-projects" 
+            element={<ProtectedRouteWrapper><MyProjects /></ProtectedRouteWrapper>} 
+          />
+          <Route 
+            path="/my-network" 
+            element={<ProtectedRouteWrapper><MyNetwork /></ProtectedRouteWrapper>} 
+          />
+          <Route 
+            path="/my-rsvp-events" 
+            element={<ProtectedRouteWrapper><MyRSVPEvents /></ProtectedRouteWrapper>} 
+          />
+          <Route 
+            path="/profile" 
+            element={<ProtectedRouteWrapper><Profile /></ProtectedRouteWrapper>} 
+          />
+        </Routes>
+      </Router>
+    </AuthWrapper>
   );
 }
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
+    <ClerkProvider 
+      publishableKey={PUBLISHABLE_KEY} 
+      afterSignOutUrl="/"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
+      appearance={{
+        baseTheme: undefined,
+        variables: {
+          colorPrimary: '#FFA500',
+          colorBackground: '#111827',
+          colorInputBackground: '#1F2937',
+          colorInputText: '#FFFFFF',
+          colorText: '#FFFFFF',
+          colorTextSecondary: '#9CA3AF',
+          colorNeutral: '#374151',
+          colorDanger: '#EF4444',
+          colorSuccess: '#10B981',
+          colorWarning: '#F59E0B',
+          borderRadius: '0.375rem',
+          spacingUnit: '1rem'
+        },
+        elements: {
+          modalContent: "bg-gray-900 border border-gray-800",
+          modalCloseButton: "text-gray-400 hover:text-white",
+          card: "bg-gray-900 border border-gray-800 shadow-xl",
+          headerTitle: "text-white text-2xl font-bold",
+          headerSubtitle: "text-gray-400",
+          socialButtonsBlockButton: "bg-gray-800 border border-gray-700 text-white hover:bg-gray-700",
+          socialButtonsBlockButtonText: "text-white",
+          dividerLine: "bg-gray-700",
+          dividerText: "text-gray-400",
+          formFieldLabel: "text-gray-300",
+          formFieldInput: "bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-primary",
+          formButtonPrimary: "bg-primary hover:bg-primary/90 text-black font-medium",
+          footerActionText: "text-gray-400",
+          footerActionLink: "text-primary hover:text-primary/80",
+          identityPreviewText: "text-white",
+          identityPreviewEditButton: "text-primary hover:text-primary/80"
+        }
+      }}
+    >
       <AppRoutes />
-    </AuthProvider>
+    </ClerkProvider>
   </StrictMode>,
 )

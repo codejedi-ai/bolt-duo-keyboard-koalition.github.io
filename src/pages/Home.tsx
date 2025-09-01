@@ -4,8 +4,6 @@ import { Card, CardContent } from "../components/ui/card"
 import JoinDiscord from '../components/JoinDiscord'
 
 function Home() {
-  const { isAuthenticated } = useAuth();
-
   return (
     <>
       <Hero />
@@ -58,4 +56,5 @@ function Home() {
     </>
   );
 }
-import { useAuth } from '../components/AuthProvider';
+
+export default Home
