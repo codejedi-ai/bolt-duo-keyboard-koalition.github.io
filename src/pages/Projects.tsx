@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { apiClient } from '../lib/api';
 
 interface Project {
   id: string;
@@ -10,6 +10,10 @@ interface Project {
   github_link: string;
   devpost_link?: string;
   live_link?: string;
+  author?: {
+    username: string;
+    avatar_url?: string;
+  };
 }
 
 function Projects(): JSX.Element {
@@ -24,15 +28,11 @@ function Projects(): JSX.Element {
   const loadProjects = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await supabase
-        .from('user_projects')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setProjects(data || []);
+      setError(null);
+      const response = await apiClient.getPublicProjects();
+      setProjects(response.projects || []);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'Failed to load projects');
     } finally {
       setIsLoading(false);
     }
@@ -65,15 +65,37 @@ function Projects(): JSX.Element {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project, index) => (
           <div key={index} className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-            <img src={project.image_url} alt={project.name} className="w-full h-48 object-cover" />
+            {project.image_url && (
+              <img src={project.image_url} alt={project.name} className="w-full h-48 object-cover" />
+            )}
             <div className="p-4">
               <h3 className="text-xl font-bold mb-2">{project.name}</h3>
               <p className="text-gray-400 mb-4">{project.description}</p>
+              {project.author && (
+                <div className="flex items-center mb-2">
+                  {project.author.avatar_url ? (
+                    <img
+                      src={project.author.avatar_url}
+                      alt={project.author.username}
+                      className="w-6 h-6 rounded-full mr-2"
+                    />
+                  ) : (
+                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center mr-2">
+                      <span className="text-black text-xs font-semibold">
+                        {project.author.username.charAt(0)}
+                      </span>
+                    </div>
+                  )}
+                  <span className="text-sm text-gray-500">by {project.author.username}</span>
+                </div>
+              )}
               <p className="text-gray-500 mb-2">
                 Tech Stack: {project.tech_stack?.join(', ') || 'Not specified'}
               </p>
               <div className="mt-2 flex justify-between">
-                <a href={project.github_link} className="text-blue-500 hover:underline transition-colors duration-200">GitHub</a>
+                {project.github_link && (
+                  <a href={project.github_link} className="text-blue-500 hover:underline transition-colors duration-200">GitHub</a>
+                )}
                 {project.devpost_link ? (
                   <a href={project.devpost_link} className="text-blue-500 hover:underline transition-colors duration-200">Devpost</a>
                 ) : (

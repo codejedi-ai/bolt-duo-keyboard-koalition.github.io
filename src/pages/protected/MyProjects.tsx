@@ -35,18 +35,19 @@ function MyProjects(): JSX.Element {
   const [message, setMessage] = useState('');
 
   // Load projects on component mount
-  useState(() => {
+  useEffect(() => {
     loadProjects();
-  });
+  }, []);
 
   const loadProjects = async () => {
     try {
       setIsLoading(true);
+      setMessage('');
       const response = await apiClient.getUserProjects();
       setProjects(response.projects || []);
     } catch (error) {
       console.error('Error loading projects:', error);
-      setMessage('Failed to load projects');
+      setMessage('Failed to load projects. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +72,7 @@ function MyProjects(): JSX.Element {
       setMessage('Project added successfully!');
     } catch (error: any) {
       console.error('Error adding project:', error);
-      setMessage(error.message || 'Failed to add project');
+      setMessage(error.message || 'Failed to add project. Please try again.');
     }
   };
 
@@ -84,7 +85,7 @@ function MyProjects(): JSX.Element {
       setMessage('Project deleted successfully!');
     } catch (error: any) {
       console.error('Error deleting project:', error);
-      setMessage(error.message || 'Failed to delete project');
+      setMessage(error.message || 'Failed to delete project. Please try again.');
     }
   };
 

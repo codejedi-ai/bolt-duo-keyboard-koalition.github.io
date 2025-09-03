@@ -10,22 +10,35 @@ class ApiClient {
     return session.access_token;
   }
 
-  private async request(endpoint: string, options: RequestInit = {}): Promise<any> {
+  private async request(endpoint: string, options: RequestInit = {}, requireAuth: boolean = true): Promise<any> {
+    const headers: Record<string, string> = {
+      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json',
+      ...options.headers as Record<string, string>,
+    };
+
+    if (requireAuth) {
+      const token = await this.getAuthToken();
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const token = await this.getAuthToken();
     
     const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${endpoint}`, {
       ...options,
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers,
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`API Error: ${response.status} - ${error}`);
+      let errorMessage = `API Error: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch {
+        const errorText = await response.text();
+        errorMessage = errorText || errorMessage;
+      }
+      throw new Error(errorMessage);
     }
 
     return response.json();
@@ -137,11 +150,11 @@ class ApiClient {
     if (options?.upcomingOnly) params.append('upcoming', 'true');
     
     const queryString = params.toString();
-    return this.request(`events${queryString ? `?${queryString}` : ''}`);
+    return this.request(`events${queryString ? `?${queryString}` : ''}`, {}, false);
   }
 
   async getEvent(eventId: string): Promise<any> {
-    return this.request(`events/${eventId}`);
+    return this.request(`events/${eventId}`, {}, false);
   }
 
   async createEvent(event: any): Promise<any> {
@@ -162,6 +175,11 @@ class ApiClient {
     return this.request(`events/${eventId}`, {
       method: 'DELETE',
     });
+  }
+
+  // Public Projects API (for public projects page)
+  async getPublicProjects(): Promise<any> {
+    return this.request('public-projects', {}, false);
   }
 }
 
