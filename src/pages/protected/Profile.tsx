@@ -9,10 +9,8 @@ function Profile(): JSX.Element {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     username: user?.username || '',
-    bio: user?.bio || '',
-    skills: user?.skills?.join(', ') || '',
-    github_url: user?.github_url || '',
-    linkedin_url: user?.linkedin_url || ''
+    first_name: user?.first_name || '',
+    last_name: user?.last_name || ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -23,12 +21,7 @@ function Profile(): JSX.Element {
     setMessage('');
 
     try {
-      const updates = {
-        ...formData,
-        skills: formData.skills.split(',').map(s => s.trim()).filter(s => s)
-      };
-
-      const result = await updateProfile(updates);
+      const result = await updateProfile(formData);
       
       if (result.success) {
         setMessage('Profile updated successfully!');
@@ -79,13 +72,13 @@ function Profile(): JSX.Element {
                 </div>
               </div>
             </div>
-              <Button
-                onClick={() => setIsEditing(!isEditing)}
-                variant="outline"
-                className="border-gray-600 text-gray-300 hover:bg-gray-800"
-              >
-                {isEditing ? 'Cancel' : 'Edit Profile'}
-              </Button>
+            <Button
+              onClick={() => setIsEditing(!isEditing)}
+              variant="outline"
+              className="border-gray-600 text-gray-300 hover:bg-gray-800 mb-6"
+            >
+              {isEditing ? 'Cancel' : 'Edit Profile'}
+            </Button>
 
             {message && (
               <div className={`px-4 py-3 rounded-md mb-4 ${
@@ -98,106 +91,61 @@ function Profile(): JSX.Element {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={user?.email || ''}
-                    disabled
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-gray-400 cursor-not-allowed"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
-                </div>
-
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.username}
-                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    disabled={!isEditing}
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
-                    placeholder="Choose a username"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Display Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.username}
-                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    disabled={!isEditing}
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
-                    placeholder="Your display name"
-                  />
-                </div>
-              </div>
-
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Bio
+                  Email
                 </label>
-                <textarea
-                  value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  disabled={!isEditing}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed h-24"
-                  placeholder="Tell us about yourself"
+                <input
+                  type="email"
+                  value={user?.email || ''}
+                  disabled
+                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-gray-400 cursor-not-allowed"
                 />
+                <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.first_name}
+                    onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                    disabled={!isEditing}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+                    placeholder="Your first name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.last_name}
+                    onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                    disabled={!isEditing}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
+                    placeholder="Your last name"
+                  />
+                </div>
               </div>
 
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Skills (comma separated)
+                  Username
                 </label>
                 <input
                   type="text"
-                  value={formData.skills}
-                  onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   disabled={!isEditing}
                   className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
-                  placeholder="React, TypeScript, Node.js"
+                  placeholder="Choose a username"
                 />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    GitHub URL
-                  </label>
-                  <input
-                    type="url"
-                    value={formData.github_url}
-                    onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
-                    disabled={!isEditing}
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
-                    placeholder="https://github.com/username"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    LinkedIn URL
-                  </label>
-                  <input
-                    type="url"
-                    value={formData.linkedin_url}
-                    onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-                    disabled={!isEditing}
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
-                    placeholder="https://linkedin.com/in/username"
-                  />
-                </div>
               </div>
 
               {isEditing && (
