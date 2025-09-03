@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Leetcode Session",
+    "date": "2025-02-01",
+    "time": "7:00 PM",
+    "description": "Weekly coding practice session focusing on algorithm problems and interview preparation.",
+    "image": "https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "location": "Online",
+    "registrationLink": "https://app.getriver.io/beta/duo-keyboard-koalition"
+  },
+  {
+    "name": "Vibe Coding Session",
+    "date": "2025-02-03",
+    "time": "2:00 PM",
+    "description": "Casual coding session where we work on personal projects and help each other out.",
+    "image": "https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "location": "William Cafe, Waterloo",
+    "registrationLink": "https://app.getriver.io/beta/duo-keyboard-koalition"
+  },
+  {
+    "name": "Hack the North Prep",
+    "date": "2025-02-28",
+    "time": "6:00 PM",
+    "description": "Preparation session for Hack the North - team formation, brainstorming, and strategy planning.",
+    "image": "https://images.pexels.com/photos/1181677/pexels-photo-1181677.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "location": "Online",
+    "registrationLink": "https://app.getriver.io/beta/duo-keyboard-koalition"
+  },
+  {
+    "name": "React Workshop",
+    "date": "2025-03-05",
+    "time": "3:00 PM",
+    "description": "Hands-on workshop covering React fundamentals and modern development practices.",
+    "image": "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "location": "Online",
+    "registrationLink": "https://app.getriver.io/beta/duo-keyboard-koalition"
+  },
+  {
+    "name": "AI/ML Study Group",
+    "date": "2025-03-10",
+    "time": "4:00 PM",
+    "description": "Study group focused on machine learning concepts and practical AI applications.",
+    "image": "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "location": "University of Waterloo",
+    "registrationLink": "https://app.getriver.io/beta/duo-keyboard-koalition"
+  }
+]
