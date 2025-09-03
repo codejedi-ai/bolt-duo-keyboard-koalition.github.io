@@ -37,16 +37,16 @@ function Profile(): JSX.Element {
   };
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
+    <div className="h-full flex flex-col">
+      <div className="p-8 pb-4">
         <h1 className="text-3xl font-bold mb-2">Profile Settings</h1>
         <p className="text-gray-400">
           Manage your account settings and personal information
         </p>
       </div>
       
-      <div className="max-w-2xl">
-        <Card className="bg-gray-900 border-gray-800">
+      <div className="flex-1 p-8 pt-0">
+        <Card className="bg-gray-900 border-gray-800 h-full">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center justify-between w-full">
