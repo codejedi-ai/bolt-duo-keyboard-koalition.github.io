@@ -13,6 +13,7 @@ import Projects from './pages/Projects'
 import Events from './pages/Events'
 import EventDate from './pages/EventDate'
 import Auth from './pages/Auth'
+import DiscordCallback from './pages/DiscordCallback'
 import Dashboard from './pages/protected/Dashboard'
 import MyProjects from './pages/protected/MyProjects'
 import MyNetwork from './pages/protected/MyNetwork'
@@ -76,6 +77,7 @@ function AppRoutes(): JSX.Element {
           <Route path="/events" element={<PublicLayout><Events /></PublicLayout>} />
           <Route path="/events/:date" element={<PublicLayout><EventDate /></PublicLayout>} />
           <Route path="/auth" element={<PublicLayout><Auth /></PublicLayout>} />
+          <Route path="/auth/discord/callback" element={<PublicLayout><DiscordCallback /></PublicLayout>} />
 
           {/* Protected Dashboard Routes */}
           <Route 
