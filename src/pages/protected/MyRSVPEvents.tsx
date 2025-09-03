@@ -1,90 +1,72 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
+import { apiClient } from '../../lib/api';
 import { Calendar, MapPin, Clock, Users, X, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 
 interface RSVPEvent {
   id: string;
-  name: string;
-  date: string;
-  time: string;
-  location: string;
+  event_name: string;
+  event_date: string;
+  event_time: string;
+  event_location: string;
   description: string;
-  image: string;
   attendees: number;
   maxAttendees?: number;
   status: 'upcoming' | 'past' | 'cancelled';
-  rsvpDate: string;
+  rsvp_date: string;
 }
 
 function MyRSVPEvents(): JSX.Element {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
+  const [rsvpEvents, setRsvpEvents] = useState<RSVPEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Mock RSVP data - in real app this would come from your backend
-  const [rsvpEvents] = useState<RSVPEvent[]>([
-    {
-      id: '1',
-      name: 'Leetcode Session',
-      date: '2025-08-01',
-      time: '7:00 PM',
-      location: 'Online',
-      description: 'Collaborative session working on LeetCode problems to improve algorithmic thinking',
-      image: 'https://image.pollinations.ai/prompt/leetcode%20coding%20session%20algorithms%20programming?height=576&nologo=true&model=flux&seed=42',
-      attendees: 12,
-      maxAttendees: 20,
-      status: 'upcoming',
-      rsvpDate: '2025-01-15'
-    },
-    {
-      id: '2',
-      name: 'Vibe Coding Session',
-      date: '2025-08-03',
-      time: '2:00 PM',
-      location: 'William Cafe, Waterloo',
-      description: 'Relaxed coding session where we work on personal projects and share knowledge in a chill environment',
-      image: 'https://image.pollinations.ai/prompt/relaxed%20coding%20session%20developers%20working%20together%20chill%20vibe?height=576&nologo=true&model=flux&seed=42',
-      attendees: 8,
-      maxAttendees: 15,
-      status: 'upcoming',
-      rsvpDate: '2025-01-16'
-    },
-    {
-      id: '3',
-      name: 'Hack the North - Pre Hackathon Networking',
-      date: '2025-08-31',
-      time: '6:00 PM',
-      location: 'Online',
-      description: 'Network session before Hack the North to meet fellow participants and form teams',
-      image: 'https://image.pollinations.ai/prompt/hackathon%20networking%20event%20people%20collaborating%20coding%20hack%20the%20north?height=576&nologo=true&model=flux&seed=42',
-      attendees: 45,
-      maxAttendees: 50,
-      status: 'upcoming',
-      rsvpDate: '2025-01-20'
-    },
-    {
-      id: '4',
-      name: 'Winter Hackathon Prep',
-      date: '2024-12-15',
-      time: '3:00 PM',
-      location: 'University of Waterloo',
-      description: 'Preparation session for upcoming winter hackathons',
-      image: 'https://image.pollinations.ai/prompt/winter%20hackathon%20preparation%20coding%20session?height=576&nologo=true&model=flux&seed=42',
-      attendees: 25,
-      status: 'past',
-      rsvpDate: '2024-12-01'
+  useEffect(() => {
+    loadRSVPs();
+  }, []);
+
+  const loadRSVPs = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      const response = await apiClient.getUserRSVPs();
+      const rsvps = response.rsvps || [];
+      
+      // Process RSVPs and determine status
+      const today = new Date().toISOString().split('T')[0];
+      const processedRsvps = rsvps.map((rsvp: any) => ({
+        ...rsvp,
+        status: rsvp.event_date >= today ? 'upcoming' : 'past',
+        attendees: Math.floor(Math.random() * 30) + 5, // Mock attendee count
+        description: rsvp.event_description || 'No description available'
+      }));
+      
+      setRsvpEvents(processedRsvps);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load RSVPs');
+    } finally {
+      setIsLoading(false);
     }
-  ]);
+  };
 
   const upcomingEvents = rsvpEvents.filter(event => event.status === 'upcoming');
   const pastEvents = rsvpEvents.filter(event => event.status === 'past');
 
   const currentEvents = activeTab === 'upcoming' ? upcomingEvents : pastEvents;
 
-  const handleCancelRSVP = (eventId: string) => {
-    // In real app, this would make an API call to cancel RSVP
-    console.log('Cancelling RSVP for event:', eventId);
+  const handleCancelRSVP = async (eventId: string) => {
+    try {
+      await apiClient.cancelRSVP(eventId);
+      setError('');
+      // Reload RSVPs to reflect changes
+      loadRSVPs();
+    } catch (err: any) {
+      setError(err.message || 'Failed to cancel RSVP');
+    }
   };
 
   const formatDate = (dateStr: string): string => {
@@ -96,6 +78,14 @@ function MyRSVPEvents(): JSX.Element {
       day: 'numeric' 
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-8 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -145,6 +135,12 @@ function MyRSVPEvents(): JSX.Element {
         </Card>
       </div>
 
+      {error && (
+        <div className="mb-6 px-4 py-3 bg-red-500/20 border border-red-500 text-red-400 rounded-md">
+          {error}
+        </div>
+      )}
+
       {/* Tabs */}
       <div className="mb-6">
         <div className="flex bg-gray-800 rounded-lg p-1 w-fit">
@@ -178,7 +174,7 @@ function MyRSVPEvents(): JSX.Element {
             <Card key={event.id} className="bg-gray-900 border-gray-800 hover:border-primary/50 transition-colors">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold text-white">{event.name}</h3>
+                  <h3 className="text-xl font-bold text-white">{event.event_name}</h3>
                   {activeTab === 'upcoming' && (
                     <button
                       onClick={() => handleCancelRSVP(event.id)}
@@ -193,15 +189,15 @@ function MyRSVPEvents(): JSX.Element {
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-sm text-gray-400">
                     <Calendar className="w-4 h-4 mr-2" />
-                    {formatDate(event.date)}
+                    {formatDate(event.event_date)}
                   </div>
                   <div className="flex items-center text-sm text-gray-400">
                     <Clock className="w-4 h-4 mr-2" />
-                    {event.time}
+                    {event.event_time}
                   </div>
                   <div className="flex items-center text-sm text-gray-400">
                     <MapPin className="w-4 h-4 mr-2" />
-                    {event.location}
+                    {event.event_location}
                   </div>
                   <div className="flex items-center text-sm text-gray-400">
                     <Users className="w-4 h-4 mr-2" />
@@ -216,7 +212,7 @@ function MyRSVPEvents(): JSX.Element {
 
                 <div className="flex justify-between items-center pt-4 border-t border-gray-800">
                   <p className="text-xs text-gray-500">
-                    RSVP'd on {new Date(event.rsvpDate).toLocaleDateString()}
+                    RSVP'd on {new Date(event.rsvp_date).toLocaleDateString()}
                   </p>
                   {activeTab === 'upcoming' && (
                     <div className="flex items-center text-green-400 text-xs">

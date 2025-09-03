@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
+import { apiClient } from '../../lib/api';
 import { Users, UserPlus, MessageCircle, Github, Linkedin, Search, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 
 interface NetworkMember {
   id: string;
-  name: string;
   username: string;
   avatar?: string;
   bio: string;
   skills: string[];
-  githubUrl?: string;
-  linkedinUrl?: string;
+  github_url?: string;
+  linkedin_url?: string;
   isConnected: boolean;
   mutualConnections: number;
 }
@@ -21,70 +21,88 @@ function MyNetwork(): JSX.Element {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'connections' | 'discover'>('connections');
+  const [networkMembers, setNetworkMembers] = useState<NetworkMember[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Mock data - in real app this would come from your backend
-  const [networkMembers] = useState<NetworkMember[]>([
-    {
-      id: '1',
-      name: 'Alex Chen',
-      username: 'alexchen',
-      bio: 'Full-stack developer passionate about AI and machine learning',
-      skills: ['React', 'Python', 'TensorFlow'],
-      githubUrl: 'https://github.com/alexchen',
-      linkedinUrl: 'https://linkedin.com/in/alexchen',
-      isConnected: true,
-      mutualConnections: 3
-    },
-    {
-      id: '2',
-      name: 'Sarah Kim',
-      username: 'sarahkim',
-      bio: 'Mobile app developer and hackathon enthusiast',
-      skills: ['React Native', 'Swift', 'Kotlin'],
-      githubUrl: 'https://github.com/sarahkim',
-      isConnected: true,
-      mutualConnections: 5
-    },
-    {
-      id: '3',
-      name: 'Mike Johnson',
-      username: 'mikej',
-      bio: 'Backend engineer specializing in distributed systems',
-      skills: ['Node.js', 'Go', 'Docker'],
-      isConnected: false,
-      mutualConnections: 2
-    },
-    {
-      id: '4',
-      name: 'Emily Zhang',
-      username: 'emilyzhang',
-      bio: 'UI/UX designer who codes. Love creating beautiful interfaces',
-      skills: ['Figma', 'React', 'CSS'],
-      linkedinUrl: 'https://linkedin.com/in/emilyzhang',
-      isConnected: false,
-      mutualConnections: 1
+  useEffect(() => {
+    loadNetworkData();
+  }, [activeTab]);
+
+  const loadNetworkData = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      
+      if (activeTab === 'connections') {
+        const response = await apiClient.getUserConnections();
+        const connections = response.connections || [];
+        setNetworkMembers(connections.map((conn: any) => ({
+          id: conn.other_user?.id || conn.connected_user_id,
+          username: conn.other_user?.username || 'Unknown User',
+          bio: conn.other_user?.bio || 'No bio available',
+          skills: conn.other_user?.skills || [],
+          github_url: conn.other_user?.github_url,
+          linkedin_url: conn.other_user?.linkedin_url,
+          avatar: conn.other_user?.avatar_url,
+          isConnected: true,
+          mutualConnections: Math.floor(Math.random() * 5) // Mock for now
+        })));
+      } else {
+        const response = await apiClient.searchUsers('', 20);
+        const users = response.users || [];
+        setNetworkMembers(users.map((user: any) => ({
+          id: user.id,
+          username: user.username || 'Unknown User',
+          bio: user.bio || 'No bio available',
+          skills: user.skills || [],
+          github_url: user.github_url,
+          linkedin_url: user.linkedin_url,
+          avatar: user.avatar_url,
+          isConnected: user.isConnected || false,
+          mutualConnections: user.mutualConnections || 0
+        })));
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to load network data');
+    } finally {
+      setIsLoading(false);
     }
-  ]);
+  };
 
   const connections = networkMembers.filter(member => member.isConnected);
   const suggestions = networkMembers.filter(member => !member.isConnected);
 
   const filteredMembers = (activeTab === 'connections' ? connections : suggestions)
     .filter(member => 
-      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       member.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       member.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-  const handleConnect = (memberId: string) => {
-    // In real app, this would make an API call
-    console.log('Connecting to member:', memberId);
+  const handleConnect = async (memberId: string) => {
+    try {
+      await apiClient.createConnection(memberId);
+      setError('');
+      // Reload data to reflect changes
+      loadNetworkData();
+    } catch (err: any) {
+      setError(err.message || 'Failed to connect');
+    }
   };
 
   const handleMessage = (memberId: string) => {
-    // In real app, this would open a chat or redirect to messaging
+    // TODO: Implement messaging functionality
     console.log('Messaging member:', memberId);
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-8 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -133,6 +151,12 @@ function MyNetwork(): JSX.Element {
           </CardContent>
         </Card>
       </div>
+
+      {error && (
+        <div className="mb-6 px-4 py-3 bg-red-500/20 border border-red-500 text-red-400 rounded-md">
+          {error}
+        </div>
+      )}
 
       {/* Search and Tabs */}
       <div className="mb-6">
@@ -194,7 +218,7 @@ function MyNetwork(): JSX.Element {
                     </div>
                   )}
                   <div>
-                    <h3 className="font-semibold text-white">{member.name}</h3>
+                    <h3 className="font-semibold text-white">{member.username}</h3>
                     <p className="text-gray-400 text-sm">@{member.username}</p>
                   </div>
                 </div>
@@ -224,26 +248,26 @@ function MyNetwork(): JSX.Element {
               )}
 
               <div className="flex gap-2 mb-4">
-                {member.githubUrl && (
+                {member.github_url && (
                   <Button
                     variant="outline"
                     size="sm"
                     asChild
                     className="border-gray-600 text-gray-300 hover:bg-gray-800"
                   >
-                    <a href={member.githubUrl} target="_blank" rel="noopener noreferrer">
+                    <a href={member.github_url} target="_blank" rel="noopener noreferrer">
                       <Github className="w-3 h-3" />
                     </a>
                   </Button>
                 )}
-                {member.linkedinUrl && (
+                {member.linkedin_url && (
                   <Button
                     variant="outline"
                     size="sm"
                     asChild
                     className="border-gray-600 text-gray-300 hover:bg-gray-800"
                   >
-                    <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer">
+                    <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer">
                       <Linkedin className="w-3 h-3" />
                     </a>
                   </Button>
