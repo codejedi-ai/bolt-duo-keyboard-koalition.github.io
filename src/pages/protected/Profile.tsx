@@ -9,8 +9,6 @@ function Profile(): JSX.Element {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     username: user?.username || '',
-    first_name: user?.first_name || '',
-    last_name: user?.last_name || '',
     bio: user?.bio || '',
     skills: user?.skills?.join(', ') || '',
     github_url: user?.github_url || '',
@@ -132,29 +130,15 @@ function Profile(): JSX.Element {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-300 text-sm font-medium mb-2">
-                    First Name
+                    Display Name
                   </label>
                   <input
                     type="text"
-                    value={formData.first_name}
-                    onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     disabled={!isEditing}
                     className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
-                    placeholder="First name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.last_name}
-                    onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                    disabled={!isEditing}
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
-                    placeholder="Last name"
+                    placeholder="Your display name"
                   />
                 </div>
               </div>

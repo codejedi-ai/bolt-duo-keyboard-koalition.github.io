@@ -43,12 +43,12 @@ function UserProfile(): JSX.Element {
         ) : (
           <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
             <span className="text-black font-semibold text-sm">
-              {user?.first_name?.charAt(0) || user?.username?.charAt(0) || user?.email?.charAt(0) || 'U'}
+              {user?.username?.charAt(0) || user?.email?.charAt(0) || 'U'}
             </span>
           </div>
         )}
         <span className="text-sm font-medium">
-          {user?.first_name || user?.username || user?.email?.split('@')[0]}
+          {user?.username || user?.email?.split('@')[0]}
         </span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -58,7 +58,7 @@ function UserProfile(): JSX.Element {
           <div className="py-1">
             <div className="px-4 py-3 border-b border-gray-700">
               <p className="text-sm font-medium text-white">
-                {user?.first_name || user?.username || user?.email?.split('@')[0]}
+                {user?.username || user?.email?.split('@')[0]}
               </p>
               <p className="text-xs text-gray-400">
                 {user?.email}

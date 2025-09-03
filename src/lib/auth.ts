@@ -5,8 +5,6 @@ export interface AuthUser {
   id: string;
   email: string;
   username?: string;
-  first_name?: string;
-  last_name?: string;
   bio?: string;
   skills?: string[];
   github_url?: string;
@@ -41,55 +39,69 @@ class AuthManager {
   }
 
   private async getOrCreateUserProfile(user: User): Promise<AuthUser> {
-    // First, try to get existing profile
-    const { data: existingProfile } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+    try {
+      // First, try to get existing profile
+      const { data: existingProfile, error: fetchError } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
 
-    if (existingProfile) {
+      if (existingProfile && !fetchError) {
+        return {
+          id: existingProfile.id,
+          email: user.email!,
+          username: existingProfile.username,
+          bio: existingProfile.bio,
+          skills: existingProfile.skills,
+          github_url: existingProfile.github_url,
+          linkedin_url: existingProfile.linkedin_url,
+          avatar_url: existingProfile.avatar_url || user.user_metadata?.avatar_url
+        };
+      }
+
+      // Create new profile if it doesn't exist
+      const newProfile = {
+        id: user.id,
+        username: user.user_metadata?.preferred_username || user.user_metadata?.username,
+        avatar_url: user.user_metadata?.avatar_url
+      };
+
+      const { data: createdProfile, error: createError } = await supabase
+        .from('user_profiles')
+        .insert(newProfile)
+        .select()
+        .single();
+
+      if (createError) {
+        console.error('Error creating profile:', createError);
+        // Return basic user info even if profile creation fails
+        return {
+          id: user.id,
+          email: user.email!,
+          avatar_url: user.user_metadata?.avatar_url
+        };
+      }
+
       return {
-        id: existingProfile.id,
+        id: user.id,
         email: user.email!,
-        username: existingProfile.username,
-        first_name: existingProfile.first_name,
-        last_name: existingProfile.last_name,
-        bio: existingProfile.bio,
-        skills: existingProfile.skills,
-        github_url: existingProfile.github_url,
-        linkedin_url: existingProfile.linkedin_url,
-        avatar_url: existingProfile.avatar_url || user.user_metadata?.avatar_url
+        username: createdProfile?.username,
+        bio: createdProfile?.bio,
+        skills: createdProfile?.skills,
+        github_url: createdProfile?.github_url,
+        linkedin_url: createdProfile?.linkedin_url,
+        avatar_url: createdProfile?.avatar_url
+      };
+    } catch (error) {
+      console.error('Error in getOrCreateUserProfile:', error);
+      // Return basic user info if database operations fail
+      return {
+        id: user.id,
+        email: user.email!,
+        avatar_url: user.user_metadata?.avatar_url
       };
     }
-
-    // Create new profile
-    const newProfile = {
-      id: user.id,
-      username: user.user_metadata?.preferred_username || user.user_metadata?.username,
-      first_name: user.user_metadata?.first_name || user.user_metadata?.name?.split(' ')[0],
-      last_name: user.user_metadata?.last_name || user.user_metadata?.name?.split(' ').slice(1).join(' '),
-      avatar_url: user.user_metadata?.avatar_url
-    };
-
-    const { data: createdProfile } = await supabase
-      .from('user_profiles')
-      .insert(newProfile)
-      .select()
-      .single();
-
-    return {
-      id: user.id,
-      email: user.email!,
-      username: createdProfile?.username,
-      first_name: createdProfile?.first_name,
-      last_name: createdProfile?.last_name,
-      bio: createdProfile?.bio,
-      skills: createdProfile?.skills,
-      github_url: createdProfile?.github_url,
-      linkedin_url: createdProfile?.linkedin_url,
-      avatar_url: createdProfile?.avatar_url
-    };
   }
 
   onAuthStateChange(callback: (user: AuthUser | null) => void) {
@@ -108,10 +120,15 @@ class AuthManager {
   }
 
   async getCurrentUser(): Promise<AuthUser | null> {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) return null;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return null;
 
-    return await this.getOrCreateUserProfile(session.user);
+      return await this.getOrCreateUserProfile(session.user);
+    } catch (error) {
+      console.error('Error getting current user:', error);
+      return null;
+    }
   }
 
   async register(email: string, password: string, metadata?: { username?: string; first_name?: string; last_name?: string }): Promise<AuthResponse> {
