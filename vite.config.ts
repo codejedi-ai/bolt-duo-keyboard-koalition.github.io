@@ -7,6 +7,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
   },
-  // Use relative paths for deployment flexibility
-  base: './',
+  // Set base path for GitHub Pages deployment with custom domain
+  base: '/',
 });
