@@ -58,9 +58,27 @@ function Profile(): JSX.Element {
         <Card className="bg-gray-900 border-gray-800">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <User className="w-6 h-6 text-primary mr-3" />
-                <h2 className="text-xl font-bold text-white">Profile Information</h2>
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                  <User className="w-6 h-6 text-primary mr-3" />
+                  <h2 className="text-xl font-bold text-white">Profile Information</h2>
+                </div>
+                {/* User Avatar */}
+                <div className="flex items-center">
+                  {user?.avatar_url ? (
+                    <img
+                      src={user.avatar_url}
+                      alt={user.first_name || user.username || 'User'}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center border-2 border-primary">
+                      <span className="text-black font-bold text-xl">
+                        {user?.first_name?.charAt(0) || user?.username?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
               <Button
                 onClick={() => setIsEditing(!isEditing)}
@@ -69,7 +87,6 @@ function Profile(): JSX.Element {
               >
                 {isEditing ? 'Cancel' : 'Edit Profile'}
               </Button>
-            </div>
 
             {message && (
               <div className={`px-4 py-3 rounded-md mb-4 ${
