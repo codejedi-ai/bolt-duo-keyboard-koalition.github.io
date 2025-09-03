@@ -7,6 +7,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
   },
-  // Add base path for GitHub Pages deployment
-  base: 'https://duo-keyboard-koalition.github.io/',
+  // Use relative paths for deployment flexibility
+  base: './',
 });
