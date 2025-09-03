@@ -36,21 +36,21 @@ function UserDropdown(): JSX.Element | null {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 text-white hover:text-primary transition-colors rounded-md hover:bg-gray-800"
       >
-        {user.avatar_url ? (
+        {user?.avatar_url ? (
           <img
             src={user.avatar_url}
-            alt={user.first_name || 'User'}
+            alt={user.first_name || user.username || 'User'}
             className="w-8 h-8 rounded-full object-cover"
           />
         ) : (
           <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
             <span className="text-black font-semibold text-sm">
-              {user.first_name?.charAt(0) || user.email.charAt(0) || 'U'}
+              {user?.first_name?.charAt(0) || user?.username?.charAt(0) || user?.email?.charAt(0) || 'U'}
             </span>
           </div>
         )}
         <span className="text-sm font-medium">
-          {user.first_name || user.username || user.email.split('@')[0]}
+          {user?.first_name || user?.username || user?.email?.split('@')[0]}
         </span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
