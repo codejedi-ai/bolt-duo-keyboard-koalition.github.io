@@ -24,6 +24,7 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@netlify/functions": "^4.2.5",
     "@supabase/supabase-js": "^2.57.0",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.20",
