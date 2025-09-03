@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@clerk/clerk-js": "^5.81.0",
-    "@clerk/clerk-react": "^5.40.0",
     "@googlemaps/js-api-loader": "^1.16.8",
     "@googlemaps/markerclusterer": "^2.5.1",
     "@radix-ui/react-slot": "^1.1.0",
