@@ -60,7 +60,7 @@ function UserDropdown(): JSX.Element | null {
           <div className="py-1">
             <div className="px-4 py-3 border-b border-gray-700">
               <p className="text-sm font-medium text-white">
-                {user.first_name} {user.last_name}
+                {user.user_metadata?.full_name || user.email?.split('@')[0]}
               </p>
               <p className="text-xs text-gray-400">
                 {user.email}
@@ -85,21 +85,21 @@ function UserDropdown(): JSX.Element | null {
               <Settings className="w-4 h-4" />
               Settings
             </button>
-            
+      {user.user_metadata?.avatar_url ? (
             <div className="border-t border-gray-700 mt-1 pt-1">
-              <button
+          src={user.user_metadata.avatar_url}
                 onClick={handleSignOut}
                 className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors flex items-center gap-2"
               >
                 <LogOut className="w-4 h-4" />
                 Sign Out
               </button>
-            </div>
+            {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
           </div>
         </div>
       )}
     </div>
-  );
+        {user.user_metadata?.full_name || user.user_metadata?.preferred_username || user.email?.split('@')[0]}
 }
 
 export default UserDropdown;
