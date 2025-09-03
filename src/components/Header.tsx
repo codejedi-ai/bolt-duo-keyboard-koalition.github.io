@@ -6,7 +6,7 @@ function Header(): JSX.Element {
   const { isAuthenticated } = useAuth();
 
   return (
-    <header className="bg-black border-b border-gray-800">
+    <header className="bg-black border-b border-gray-800 sticky top-0 z-50">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
