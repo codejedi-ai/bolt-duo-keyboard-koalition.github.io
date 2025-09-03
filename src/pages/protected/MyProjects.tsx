@@ -1,76 +1,104 @@
 import { useState } from 'react';
 import { useAuth } from '../../components/AuthProvider';
+import { apiClient } from '../../lib/api';
 import { Plus, Github, ExternalLink, Edit, Trash2, Code2, Trophy } from 'lucide-react';
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 
-interface UserProject {
+export interface UserProject {
   id: string;
+  user_id: string;
   name: string;
   description: string;
-  techStack: string[];
-  githubLink?: string;
-  liveLink?: string;
-  devpostLink?: string;
-  image?: string;
-  createdAt: string;
+  tech_stack: string[];
+  github_link?: string;
+  live_link?: string;
+  devpost_link?: string;
+  image_url?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 function MyProjects(): JSX.Element {
   const { user } = useAuth();
-  const [projects, setProjects] = useState<UserProject[]>([
-    {
-      id: '1',
-      name: 'Sample Project',
-      description: 'This is a sample project to demonstrate the layout. Add your own projects!',
-      techStack: ['React', 'TypeScript', 'Tailwind CSS'],
-      githubLink: 'https://github.com/example/project',
-      createdAt: '2025-01-01'
-    }
-  ]);
+  const [projects, setProjects] = useState<UserProject[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newProject, setNewProject] = useState<Partial<UserProject>>({
+  const [newProject, setNewProject] = useState({
     name: '',
     description: '',
-    techStack: [],
-    githubLink: '',
-    liveLink: '',
-    devpostLink: ''
+    tech_stack: [] as string[],
+    github_link: '',
+    live_link: '',
+    devpost_link: ''
+  });
+  const [message, setMessage] = useState('');
+
+  // Load projects on component mount
+  useState(() => {
+    loadProjects();
   });
 
-  const handleAddProject = () => {
-    if (!newProject.name || !newProject.description) return;
-    
-    const project: UserProject = {
-      id: Date.now().toString(),
-      name: newProject.name,
-      description: newProject.description,
-      techStack: newProject.techStack || [],
-      githubLink: newProject.githubLink,
-      liveLink: newProject.liveLink,
-      devpostLink: newProject.devpostLink,
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-
-    setProjects([...projects, project]);
-    setNewProject({
-      name: '',
-      description: '',
-      techStack: [],
-      githubLink: '',
-      liveLink: '',
-      devpostLink: ''
-    });
-    setShowAddForm(false);
+  const loadProjects = async () => {
+    try {
+      setIsLoading(true);
+      const response = await apiClient.getUserProjects();
+      setProjects(response.projects || []);
+    } catch (error) {
+      console.error('Error loading projects:', error);
+      setMessage('Failed to load projects');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleDeleteProject = (id: string) => {
-    setProjects(projects.filter(project => project.id !== id));
+  const handleAddProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProject.name || !newProject.description) return;
+    
+    try {
+      const response = await apiClient.createProject(newProject);
+      setProjects([response.project, ...projects]);
+      setNewProject({
+        name: '',
+        description: '',
+        tech_stack: [],
+        github_link: '',
+        live_link: '',
+        devpost_link: ''
+      });
+      setShowAddForm(false);
+      setMessage('Project added successfully!');
+    } catch (error: any) {
+      console.error('Error adding project:', error);
+      setMessage(error.message || 'Failed to add project');
+    }
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+    
+    try {
+      await apiClient.deleteProject(id);
+      setProjects(projects.filter(project => project.id !== id));
+      setMessage('Project deleted successfully!');
+    } catch (error: any) {
+      console.error('Error deleting project:', error);
+      setMessage(error.message || 'Failed to delete project');
+    }
   };
 
   const handleTechStackChange = (value: string) => {
     const techArray = value.split(',').map(tech => tech.trim()).filter(tech => tech);
-    setNewProject({ ...newProject, techStack: techArray });
+    setNewProject({ ...newProject, tech_stack: techArray });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-8 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
   };
 
   return (
@@ -91,100 +119,115 @@ function MyProjects(): JSX.Element {
         </Button>
       </div>
 
+      {message && (
+        <div className={`mx-8 mb-4 px-4 py-3 rounded-md ${
+          message.includes('success') 
+            ? 'bg-green-500/20 border border-green-500 text-green-400'
+            : 'bg-red-500/20 border border-red-500 text-red-400'
+        }`}>
+          {message}
+        </div>
+      )}
+
       {/* Add Project Form */}
       {showAddForm && (
         <Card className="bg-gray-900 border-gray-800 mb-8">
           <CardContent className="p-6">
             <h3 className="text-xl font-bold mb-4 text-white">Add New Project</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Project Name *
-                </label>
-                <input
-                  type="text"
-                  value={newProject.name || ''}
-                  onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                  placeholder="Enter project name"
-                />
+            <form onSubmit={handleAddProject}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Project Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={newProject.name}
+                    onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
+                    placeholder="Enter project name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Tech Stack (comma separated)
+                  </label>
+                  <input
+                    type="text"
+                    value={newProject.tech_stack.join(', ')}
+                    onChange={(e) => handleTechStackChange(e.target.value)}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
+                    placeholder="React, TypeScript, Node.js"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Description *
+                  </label>
+                  <textarea
+                    value={newProject.description}
+                    onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none h-24"
+                    placeholder="Describe your project"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    GitHub Link
+                  </label>
+                  <input
+                    type="url"
+                    value={newProject.github_link}
+                    onChange={(e) => setNewProject({ ...newProject, github_link: e.target.value })}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
+                    placeholder="https://github.com/username/project"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Live Demo Link
+                  </label>
+                  <input
+                    type="url"
+                    value={newProject.live_link}
+                    onChange={(e) => setNewProject({ ...newProject, live_link: e.target.value })}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
+                    placeholder="https://your-project.com"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Devpost/Competition Link
+                  </label>
+                  <input
+                    type="url"
+                    value={newProject.devpost_link}
+                    onChange={(e) => setNewProject({ ...newProject, devpost_link: e.target.value })}
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
+                    placeholder="https://devpost.com/software/your-project"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Tech Stack (comma separated)
-                </label>
-                <input
-                  type="text"
-                  value={newProject.techStack?.join(', ') || ''}
-                  onChange={(e) => handleTechStackChange(e.target.value)}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                  placeholder="React, TypeScript, Node.js"
-                />
+              <div className="flex gap-4 mt-6">
+                <Button
+                  type="submit"
+                  className="bg-primary hover:bg-primary/90 text-black"
+                  disabled={!newProject.name || !newProject.description}
+                >
+                  Add Project
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowAddForm(false)}
+                  className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                >
+                  Cancel
+                </Button>
               </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Description *
-                </label>
-                <textarea
-                  value={newProject.description || ''}
-                  onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none h-24"
-                  placeholder="Describe your project"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  GitHub Link
-                </label>
-                <input
-                  type="url"
-                  value={newProject.githubLink || ''}
-                  onChange={(e) => setNewProject({ ...newProject, githubLink: e.target.value })}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                  placeholder="https://github.com/username/project"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Live Demo Link
-                </label>
-                <input
-                  type="url"
-                  value={newProject.liveLink || ''}
-                  onChange={(e) => setNewProject({ ...newProject, liveLink: e.target.value })}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                  placeholder="https://your-project.com"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Devpost/Competition Link
-                </label>
-                <input
-                  type="url"
-                  value={newProject.devpostLink || ''}
-                  onChange={(e) => setNewProject({ ...newProject, devpostLink: e.target.value })}
-                  className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:border-primary focus:outline-none"
-                  placeholder="https://devpost.com/software/your-project"
-                />
-              </div>
-            </div>
-            <div className="flex gap-4 mt-6">
-              <Button
-                onClick={handleAddProject}
-                className="bg-primary hover:bg-primary/90 text-black"
-                disabled={!newProject.name || !newProject.description}
-              >
-                Add Project
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setShowAddForm(false)}
-                className="border-gray-600 text-gray-300 hover:bg-gray-800"
-              >
-                Cancel
-              </Button>
-            </div>
+            </form>
           </CardContent>
         </Card>
       )}
@@ -214,10 +257,10 @@ function MyProjects(): JSX.Element {
                   {project.description}
                 </p>
                 
-                {project.techStack.length > 0 && (
+                {project.tech_stack.length > 0 && (
                   <div className="mb-4">
                     <div className="flex flex-wrap gap-2">
-                      {project.techStack.map((tech, index) => (
+                      {project.tech_stack.map((tech, index) => (
                         <span
                           key={index}
                           className="px-2 py-1 bg-primary/20 text-primary text-xs rounded-md"
@@ -230,40 +273,40 @@ function MyProjects(): JSX.Element {
                 )}
                 
                 <div className="flex gap-2 flex-wrap">
-                  {project.githubLink && (
+                  {project.github_link && (
                     <Button
                       variant="outline"
                       size="sm"
                       asChild
                       className="border-gray-600 text-gray-300 hover:bg-gray-800"
                     >
-                      <a href={project.githubLink} target="_blank" rel="noopener noreferrer">
+                      <a href={project.github_link} target="_blank" rel="noopener noreferrer">
                         <Github className="w-3 h-3 mr-1" />
                         GitHub
                       </a>
                     </Button>
                   )}
-                  {project.liveLink && (
+                  {project.live_link && (
                     <Button
                       variant="outline"
                       size="sm"
                       asChild
                       className="border-gray-600 text-gray-300 hover:bg-gray-800"
                     >
-                      <a href={project.liveLink} target="_blank" rel="noopener noreferrer">
+                      <a href={project.live_link} target="_blank" rel="noopener noreferrer">
                         <ExternalLink className="w-3 h-3 mr-1" />
                         Live Demo
                       </a>
                     </Button>
                   )}
-                  {project.devpostLink && (
+                  {project.devpost_link && (
                     <Button
                       variant="outline"
                       size="sm"
                       asChild
                       className="border-gray-600 text-gray-300 hover:bg-gray-800"
                     >
-                      <a href={project.devpostLink} target="_blank" rel="noopener noreferrer">
+                      <a href={project.devpost_link} target="_blank" rel="noopener noreferrer">
                         <Trophy className="w-3 h-3 mr-1" />
                         Devpost
                       </a>
@@ -273,7 +316,7 @@ function MyProjects(): JSX.Element {
                 
                 <div className="mt-4 pt-4 border-t border-gray-800">
                   <p className="text-xs text-gray-500">
-                    Added on {new Date(project.createdAt).toLocaleDateString()}
+                    Added on {new Date(project.created_at).toLocaleDateString()}
                   </p>
                 </div>
               </CardContent>
