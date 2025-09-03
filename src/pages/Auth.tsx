@@ -8,8 +8,6 @@ function Auth(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -50,9 +48,7 @@ function Auth(): JSX.Element {
     try {
       if (isSignUp) {
         const metadata = {
-          username: username || undefined,
-          first_name: firstName || undefined,
-          last_name: lastName || undefined
+          username: username || undefined
         };
         const result = await register(email, password, metadata);
         if (!result.success) {
@@ -171,37 +167,9 @@ function Auth(): JSX.Element {
 
             {isSignUp && (
               <>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">
-                      First Name
-                    </label>
-                    <input
-                      id="firstName"
-                      type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="First name"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      id="lastName"
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Last name"
-                    />
-                  </div>
-                </div>
                 <div>
                   <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
-                    Username (optional)
+                    Display Name (optional)
                   </label>
                   <input
                     id="username"
@@ -209,7 +177,7 @@ function Auth(): JSX.Element {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Choose a username"
+                    placeholder="Choose a display name"
                   />
                 </div>
               </>
