@@ -129,6 +129,40 @@ class ApiClient {
   async searchUsers(query: string, limit: number = 20): Promise<any> {
     return this.request(`search-users?q=${encodeURIComponent(query)}&limit=${limit}`);
   }
+
+  // Events API
+  async getEvents(options?: { date?: string; upcomingOnly?: boolean }): Promise<any> {
+    const params = new URLSearchParams();
+    if (options?.date) params.append('date', options.date);
+    if (options?.upcomingOnly) params.append('upcoming', 'true');
+    
+    const queryString = params.toString();
+    return this.request(`events${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getEvent(eventId: string): Promise<any> {
+    return this.request(`events/${eventId}`);
+  }
+
+  async createEvent(event: any): Promise<any> {
+    return this.request('events', {
+      method: 'POST',
+      body: JSON.stringify(event),
+    });
+  }
+
+  async updateEvent(eventId: string, event: any): Promise<any> {
+    return this.request(`events/${eventId}`, {
+      method: 'PUT',
+      body: JSON.stringify(event),
+    });
+  }
+
+  async deleteEvent(eventId: string): Promise<any> {
+    return this.request(`events/${eventId}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiClient = new ApiClient();

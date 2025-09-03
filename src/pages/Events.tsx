@@ -3,22 +3,43 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Calendar, ExternalLink, Clock } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import eventsData from '../data/events.json';
+import { apiClient } from '../lib/api';
 
 interface Event {
+  id: string;
   name: string;
   date: string;
   time?: string;
   description: string;
-  image: string;
+  image_url?: string;
   location: string;
-  registrationLink: string;
+  registration_link?: string;
 }
 
 function Events(): JSX.Element {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [hoveredDate, setHoveredDate] = useState<number | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
+  const loadEvents = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await apiClient.getEvents();
+      setEvents(response.events || []);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load events');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -53,7 +74,7 @@ function Events(): JSX.Element {
   const getEventsForDate = (day: number | null): Event[] => {
     if (!day) return [];
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return (eventsData as Event[])
+    return events
       .filter(event => event.date === dateStr)
       .sort((a, b) => {
         if (!a.time || !b.time) return 0;
@@ -80,7 +101,7 @@ function Events(): JSX.Element {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    return (eventsData as Event[])
+    return events
       .filter(event => {
         const eventDate = new Date(event.date);
         return eventDate >= today;
@@ -104,6 +125,30 @@ function Events(): JSX.Element {
   };
 
   const days = getDaysInMonth(currentDate);
+
+  if (isLoading) {
+    return (
+      <section className="max-w-6xl mx-auto py-16 px-4">
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="max-w-6xl mx-auto py-16 px-4">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold mb-6">Events & Calendar</h2>
+          <p className="text-red-400 mb-4">Error loading events: {error}</p>
+          <Button onClick={loadEvents} className="bg-primary hover:bg-primary/90 text-black">
+            Try Again
+          </Button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="max-w-6xl mx-auto py-16 px-4">
@@ -242,7 +287,7 @@ function Events(): JSX.Element {
                   </div>
                 )}
                 <p className="text-sm text-gray-300 mb-3">{event.description}</p>
-                {event.registrationLink && (
+                {event.registration_link && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -250,7 +295,7 @@ function Events(): JSX.Element {
                     className="w-full border-primary text-primary hover:bg-primary/20"
                   >
                     <a
-                      href={event.registrationLink}
+                      href={event.registration_link}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

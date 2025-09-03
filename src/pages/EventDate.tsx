@@ -2,16 +2,17 @@ import { useParams, Link } from 'react-router-dom';
 import { Calendar, MapPin, ArrowLeft, Clock, Users } from 'lucide-react';
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import eventsData from '../data/events.json';
+import { apiClient } from '../lib/api';
 
 interface Event {
+  id: string;
   name: string;
   date: string;
   time?: string;
   description: string;
-  image: string;
+  image_url?: string;
   location: string;
-  registrationLink: string;
+  registration_link?: string;
 }
 
 interface TimeSlot {
@@ -22,7 +23,28 @@ interface TimeSlot {
 
 function EventDate(): JSX.Element {
   const { date } = useParams();
-  const events = (eventsData as Event[]).filter(event => event.date === date);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (date) {
+      loadEventsForDate(date);
+    }
+  }, [date]);
+
+  const loadEventsForDate = async (dateStr: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await apiClient.getEvents({ date: dateStr });
+      setEvents(response.events || []);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load events');
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
@@ -86,6 +108,30 @@ function EventDate(): JSX.Element {
   };
 
   const hourlySchedule = generateHourlySchedule();
+
+  if (isLoading) {
+    return (
+      <section className="max-w-6xl mx-auto py-16 px-4">
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="max-w-6xl mx-auto py-16 px-4">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold mb-6">Events for {date && formatDate(date)}</h2>
+          <p className="text-red-400 mb-4">Error loading events: {error}</p>
+          <Button onClick={() => date && loadEventsForDate(date)} className="bg-primary hover:bg-primary/90 text-black">
+            Try Again
+          </Button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="max-w-6xl mx-auto py-16 px-4">
@@ -166,11 +212,13 @@ function EventDate(): JSX.Element {
             {events.map((event, index) => (
               <Card key={index} className="bg-gray-900 border-gray-800">
                 <CardContent className="p-4">
-                  <img 
-                    src={event.image} 
-                    alt={event.name} 
-                    className="w-full h-32 object-cover rounded-md mb-4" 
-                  />
+                  {event.image_url && (
+                    <img 
+                      src={event.image_url} 
+                      alt={event.name} 
+                      className="w-full h-32 object-cover rounded-md mb-4" 
+                    />
+                  )}
                   <h4 className="font-semibold text-white mb-2">{event.name}</h4>
                   <div className="flex items-center text-sm text-gray-400 mb-2">
                     <Clock className="w-4 h-4 mr-1" />
@@ -181,7 +229,7 @@ function EventDate(): JSX.Element {
                     {event.location}
                   </div>
                   <p className="text-sm text-gray-300 mb-4">{event.description}</p>
-                  {event.registrationLink && (
+                  {event.registration_link && (
                     <Button
                       variant="outline"
                       size="sm"
@@ -189,7 +237,7 @@ function EventDate(): JSX.Element {
                       className="w-full border-primary text-primary hover:bg-primary/20"
                     >
                       <a
-                        href={event.registrationLink}
+                        href={event.registration_link}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
