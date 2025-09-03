@@ -1,7 +1,8 @@
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
+import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.VITE_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -11,7 +12,7 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'GET, OPTIONS'
 };
 
-exports.handler = async (event, context) => {
+export const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -54,7 +55,7 @@ exports.handler = async (event, context) => {
     }
 
     const searchTerm = queryStringParameters?.q || '';
-    const limit = parseInt(queryStringParameters?.limit) || 20;
+    const limit = parseInt(queryStringParameters?.limit || '20');
 
     let query = supabase
       .from('user_profiles')
@@ -80,7 +81,7 @@ exports.handler = async (event, context) => {
       .or(`user_id.eq.${user.id},connected_user_id.eq.${user.id}`);
 
     // Create a map of connected user IDs
-    const connectedUserIds = new Set();
+    const connectedUserIds = new Set<string>();
     connections?.forEach(conn => {
       if (conn.user_id === user.id) {
         connectedUserIds.add(conn.connected_user_id);
@@ -105,7 +106,7 @@ exports.handler = async (event, context) => {
       })
     };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in search-users function:', error);
     return {
       statusCode: 500,

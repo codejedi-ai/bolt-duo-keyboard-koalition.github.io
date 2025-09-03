@@ -1,7 +1,8 @@
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
+import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.VITE_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -11,7 +12,7 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
 };
 
-exports.handler = async (event, context) => {
+export const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -46,7 +47,7 @@ exports.handler = async (event, context) => {
     }
 
     // Extract project ID from path if present
-    const pathParts = path.split('/');
+    const pathParts = path?.split('/') || [];
     const projectId = pathParts[pathParts.length - 1];
 
     switch (httpMethod) {
@@ -90,7 +91,7 @@ exports.handler = async (event, context) => {
 
       case 'POST':
         // Create new project
-        const projectData = JSON.parse(body);
+        const projectData = JSON.parse(body || '{}');
         const { data: newProject, error: createError } = await supabase
           .from('user_projects')
           .insert({
@@ -120,7 +121,7 @@ exports.handler = async (event, context) => {
           };
         }
 
-        const updateData = JSON.parse(body);
+        const updateData = JSON.parse(body || '{}');
         const { data: updatedProject, error: updateError } = await supabase
           .from('user_projects')
           .update({
@@ -175,7 +176,7 @@ exports.handler = async (event, context) => {
           body: JSON.stringify({ error: 'Method not allowed' })
         };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in user-projects function:', error);
     return {
       statusCode: 500,

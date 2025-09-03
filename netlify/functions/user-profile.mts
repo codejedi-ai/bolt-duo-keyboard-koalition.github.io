@@ -1,7 +1,8 @@
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
+import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.VITE_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -11,7 +12,7 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
 };
 
-exports.handler = async (event, context) => {
+export const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -67,7 +68,7 @@ exports.handler = async (event, context) => {
       case 'POST':
       case 'PUT':
         // Create or update user profile
-        const profileData = JSON.parse(body);
+        const profileData = JSON.parse(body || '{}');
         const { data: upsertedProfile, error: upsertError } = await supabase
           .from('user_profiles')
           .upsert({
@@ -112,7 +113,7 @@ exports.handler = async (event, context) => {
           body: JSON.stringify({ error: 'Method not allowed' })
         };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in user-profile function:', error);
     return {
       statusCode: 500,
