@@ -1,10 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
-import { ClerkProvider } from '@clerk/clerk-react'
-import { useUser } from '@clerk/clerk-react'
 import App from './App.tsx'
-import AuthWrapper from './components/AuthWrapper'
+import { AuthProvider, useAuth } from './components/AuthProvider'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import DashboardLayout from './components/DashboardLayout'
@@ -23,14 +21,8 @@ import Profile from './pages/protected/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
 import './index.css'
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Clerk Publishable Key")
-}
-
 function AppRoutes(): JSX.Element {
-  const { isSignedIn, isLoaded } = useUser();
+  const { user, loading } = useAuth();
 
   const handleDiscordJoin = () => {
     window.open('https://discord.gg/6GaWZAawUc', '_blank');
@@ -38,7 +30,7 @@ function AppRoutes(): JSX.Element {
 
   // Redirect authenticated users from home to dashboard
   const HomeRoute = () => {
-    if (!isLoaded) {
+    if (loading) {
       return (
         <div className="flex items-center justify-center min-h-screen">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
@@ -46,7 +38,7 @@ function AppRoutes(): JSX.Element {
       );
     }
     
-    if (isSignedIn) {
+    if (user) {
       return <Navigate to="/dashboard" replace />;
     }
     
@@ -74,7 +66,7 @@ function AppRoutes(): JSX.Element {
   );
 
   return (
-    <AuthWrapper>
+    <>
       <Router>
         <Routes>
           {/* Public Routes */}
@@ -108,18 +100,17 @@ function AppRoutes(): JSX.Element {
           />
         </Routes>
       </Router>
-    </AuthWrapper>
+    </>
   );
 }
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ClerkProvider 
-      publishableKey={PUBLISHABLE_KEY} 
-      afterSignOutUrl="/"
-      signInFallbackRedirectUrl="/dashboard"
-      signUpFallbackRedirectUrl="/dashboard"
-      appearance={{
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  </StrictMode>,
+)
         baseTheme: undefined,
         variables: {
           colorPrimary: '#FFA500',
