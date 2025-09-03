@@ -80,6 +80,7 @@ function Profile(): JSX.Element {
                   )}
                 </div>
               </div>
+            </div>
               <Button
                 onClick={() => setIsEditing(!isEditing)}
                 variant="outline"
