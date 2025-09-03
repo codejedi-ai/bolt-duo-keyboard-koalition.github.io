@@ -1,4 +1,4 @@
-// API client for interacting with Netlify Functions
+// API client for interacting with Supabase Edge Functions
 import { supabase } from './supabase';
 
 class ApiClient {
@@ -13,10 +13,11 @@ class ApiClient {
   private async request(endpoint: string, options: RequestInit = {}): Promise<any> {
     const token = await this.getAuthToken();
     
-    const response = await fetch(`/.netlify/functions/${endpoint}`, {
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${endpoint}`, {
       ...options,
       headers: {
         'Authorization': `Bearer ${token}`,
+        'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
         'Content-Type': 'application/json',
         ...options.headers,
       },
