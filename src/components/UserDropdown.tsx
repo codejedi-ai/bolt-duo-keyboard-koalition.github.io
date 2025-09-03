@@ -60,7 +60,7 @@ function UserDropdown(): JSX.Element | null {
           <div className="py-1">
             <div className="px-4 py-3 border-b border-gray-700">
               <p className="text-sm font-medium text-white">
-                {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                {user.first_name || user.username || user.email?.split('@')[0]}
               </p>
               <p className="text-xs text-gray-400">
                 {user.email}
