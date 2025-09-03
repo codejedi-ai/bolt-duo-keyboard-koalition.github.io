@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
-import UserDropdown from './UserDropdown';
+import LoginButton from './LoginButton';
+import UserProfile from './UserProfile';
 
 function Header(): JSX.Element {
   const { isAuthenticated } = useAuth();
 
   return (
-    <header className="bg-black border-b border-gray-800">
+    <header className="bg-black border-b border-gray-800 sticky top-0 z-50">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
@@ -27,16 +28,7 @@ function Header(): JSX.Element {
             )}
             <Link to="/projects" className="text-white hover:text-primary transition-colors">Projects</Link>
             <Link to="/events" className="text-white hover:text-primary transition-colors">Events</Link>
-            {!isAuthenticated ? (
-              <Link 
-                to="/auth"
-                className="px-4 py-2 bg-primary text-black rounded-md hover:bg-primary/90 transition-all duration-200 font-medium"
-              >
-                Login
-              </Link>
-            ) : (
-              <UserDropdown />
-            )}
+            {!isAuthenticated ? <LoginButton /> : <UserProfile />}
           </div>
         </div>
       </nav>
