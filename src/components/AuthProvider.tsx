@@ -1,21 +1,21 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, User } from '../lib/auth';
+import { auth, AuthUser } from '../lib/auth';
 
 interface AuthContextType {
-  user: User | null;
+  user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (email: string, password: string, username?: string, firstName?: string, lastName?: string) => Promise<{ success: boolean; error?: string }>;
+  register: (email: string, password: string, metadata?: { username?: string; first_name?: string; last_name?: string }) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
-  updateProfile: (updates: Partial<User>) => Promise<{ success: boolean; error?: string }>;
-  loginWithDiscord: (code: string) => Promise<{ success: boolean; error?: string }>;
+  updateProfile: (updates: Partial<AuthUser>) => Promise<{ success: boolean; error?: string }>;
+  loginWithDiscord: () => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,8 +33,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { success: result.success, error: result.error };
   };
 
-  const register = async (email: string, password: string, username?: string, firstName?: string, lastName?: string) => {
-    const result = await auth.register(email, password, username, firstName, lastName);
+  const register = async (email: string, password: string, metadata?: { username?: string; first_name?: string; last_name?: string }) => {
+    const result = await auth.register(email, password, metadata);
     return { success: result.success, error: result.error };
   };
 
@@ -42,19 +42,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await auth.logout();
   };
 
-  const updateProfile = async (updates: Partial<User>) => {
+  const updateProfile = async (updates: Partial<AuthUser>) => {
     return await auth.updateProfile(updates);
   };
 
-  const loginWithDiscord = async (code: string) => {
-    const result = await auth.loginWithDiscord(code);
-    return { success: result.success, error: result.error };
+  const loginWithDiscord = async () => {
+    return await auth.loginWithDiscord();
   };
 
   const value: AuthContextType = {
     user,
     isLoading,
-    isAuthenticated: auth.isAuthenticated(),
+    isAuthenticated: user !== null,
     login,
     register,
     logout,

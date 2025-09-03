@@ -1,8 +1,7 @@
-// In-house authentication system
 import { supabase } from './supabase';
-import { DiscordAuth, DiscordUser } from './discord-auth';
+import type { User, Session } from '@supabase/supabase-js';
 
-export interface User {
+export interface AuthUser {
   id: string;
   email: string;
   username?: string;
@@ -17,258 +16,204 @@ export interface User {
 
 export interface AuthResponse {
   success: boolean;
-  user?: User;
-  session_token?: string;
+  user?: AuthUser;
   error?: string;
 }
 
 class AuthManager {
-  private sessionToken: string | null = null;
-  private currentUser: User | null = null;
-  private listeners: ((user: User | null) => void)[] = [];
+  private listeners: ((user: AuthUser | null) => void)[] = [];
 
   constructor() {
-    // Load session from localStorage on initialization
-    this.sessionToken = localStorage.getItem('session_token');
-    if (this.sessionToken) {
-      this.validateSession();
-    }
+    // Listen to auth state changes
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        this.handleUserSignIn(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        this.notifyListeners(null);
+      }
+    });
   }
 
-  // Subscribe to auth state changes
-  onAuthStateChange(callback: (user: User | null) => void) {
+  private async handleUserSignIn(user: User) {
+    // Get or create user profile
+    const profile = await this.getOrCreateUserProfile(user);
+    this.notifyListeners(profile);
+  }
+
+  private async getOrCreateUserProfile(user: User): Promise<AuthUser> {
+    // First, try to get existing profile
+    const { data: existingProfile } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (existingProfile) {
+      return {
+        id: existingProfile.id,
+        email: user.email!,
+        username: existingProfile.username,
+        first_name: existingProfile.first_name,
+        last_name: existingProfile.last_name,
+        bio: existingProfile.bio,
+        skills: existingProfile.skills,
+        github_url: existingProfile.github_url,
+        linkedin_url: existingProfile.linkedin_url,
+        avatar_url: existingProfile.avatar_url || user.user_metadata?.avatar_url
+      };
+    }
+
+    // Create new profile
+    const newProfile = {
+      id: user.id,
+      username: user.user_metadata?.preferred_username || user.user_metadata?.username,
+      first_name: user.user_metadata?.first_name || user.user_metadata?.name?.split(' ')[0],
+      last_name: user.user_metadata?.last_name || user.user_metadata?.name?.split(' ').slice(1).join(' '),
+      avatar_url: user.user_metadata?.avatar_url
+    };
+
+    const { data: createdProfile } = await supabase
+      .from('user_profiles')
+      .insert(newProfile)
+      .select()
+      .single();
+
+    return {
+      id: user.id,
+      email: user.email!,
+      username: createdProfile?.username,
+      first_name: createdProfile?.first_name,
+      last_name: createdProfile?.last_name,
+      bio: createdProfile?.bio,
+      skills: createdProfile?.skills,
+      github_url: createdProfile?.github_url,
+      linkedin_url: createdProfile?.linkedin_url,
+      avatar_url: createdProfile?.avatar_url
+    };
+  }
+
+  onAuthStateChange(callback: (user: AuthUser | null) => void) {
     this.listeners.push(callback);
-    // Immediately call with current state
-    callback(this.currentUser);
     
-    // Return unsubscribe function
+    // Immediately call with current state
+    this.getCurrentUser().then(callback);
+    
     return () => {
       this.listeners = this.listeners.filter(listener => listener !== callback);
     };
   }
 
-  private notifyListeners() {
-    this.listeners.forEach(listener => listener(this.currentUser));
+  private notifyListeners(user: AuthUser | null) {
+    this.listeners.forEach(listener => listener(user));
   }
 
-  private async validateSession(): Promise<boolean> {
-    if (!this.sessionToken) return false;
+  async getCurrentUser(): Promise<AuthUser | null> {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return null;
 
-    try {
-      // Set session token for RLS
-      await supabase.rpc('set_config', {
-        setting_name: 'app.session_token',
-        setting_value: this.sessionToken,
-        is_local: true
-      });
-
-      const { data, error } = await supabase.rpc('get_current_user', {
-        p_session_token: this.sessionToken
-      });
-
-      if (error || !data?.success) {
-        this.clearSession();
-        return false;
-      }
-
-      this.currentUser = data.user;
-      this.notifyListeners();
-      return true;
-    } catch (error) {
-      console.error('Session validation error:', error);
-      this.clearSession();
-      return false;
-    }
+    return await this.getOrCreateUserProfile(session.user);
   }
 
-  async register(
-    email: string,
-    password: string,
-    username?: string,
-    firstName?: string,
-    lastName?: string
-  ): Promise<AuthResponse> {
+  async register(email: string, password: string, metadata?: { username?: string; first_name?: string; last_name?: string }): Promise<AuthResponse> {
     try {
-      const { data, error } = await supabase.rpc('register_user', {
-        p_email: email,
-        p_password: password,
-        p_username: username || null,
-        p_first_name: firstName || null,
-        p_last_name: lastName || null
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: metadata || {}
+        }
       });
 
       if (error) {
         return { success: false, error: error.message };
       }
 
-      if (!data.success) {
-        return { success: false, error: data.error };
+      if (data.user) {
+        const profile = await this.getOrCreateUserProfile(data.user);
+        return { success: true, user: profile };
       }
 
-      // Store session
-      this.sessionToken = data.session_token;
-      this.currentUser = data.user;
-      localStorage.setItem('session_token', this.sessionToken);
-
-      // Set session token for RLS
-      await supabase.rpc('set_config', {
-        setting_name: 'app.session_token',
-        setting_value: this.sessionToken,
-        is_local: true
-      });
-
-      this.notifyListeners();
-      return { success: true, user: data.user, session_token: data.session_token };
-    } catch (error) {
-      console.error('Registration error:', error);
       return { success: false, error: 'Registration failed' };
+    } catch (error: any) {
+      return { success: false, error: error.message };
     }
   }
 
   async login(email: string, password: string): Promise<AuthResponse> {
     try {
-      const { data, error } = await supabase.rpc('login_user', {
-        p_email: email,
-        p_password: password
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
       });
 
       if (error) {
         return { success: false, error: error.message };
       }
 
-      if (!data.success) {
-        return { success: false, error: data.error };
+      if (data.user) {
+        const profile = await this.getOrCreateUserProfile(data.user);
+        return { success: true, user: profile };
       }
 
-      // Store session
-      this.sessionToken = data.session_token;
-      this.currentUser = data.user;
-      localStorage.setItem('session_token', this.sessionToken);
+      return { success: false, error: 'Login failed' };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  }
 
-      // Set session token for RLS
-      await supabase.rpc('set_config', {
-        setting_name: 'app.session_token',
-        setting_value: this.sessionToken,
-        is_local: true
+  async loginWithDiscord(): Promise<AuthResponse> {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'discord',
+        options: {
+          redirectTo: `${window.location.origin}/auth/discord/callback`
+        }
       });
 
-      this.notifyListeners();
-      return { success: true, user: data.user, session_token: data.session_token };
-    } catch (error) {
-      console.error('Login error:', error);
-      return { success: false, error: 'Login failed' };
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
     }
   }
 
   async logout(): Promise<void> {
-    if (this.sessionToken) {
-      try {
-        await supabase.rpc('logout_user', {
-          p_session_token: this.sessionToken
-        });
-      } catch (error) {
-        console.error('Logout error:', error);
+    await supabase.auth.signOut();
+    this.notifyListeners(null);
+  }
+
+  async updateProfile(updates: Partial<AuthUser>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        return { success: false, error: 'Not authenticated' };
       }
+
+      const { error } = await supabase
+        .from('user_profiles')
+        .update(updates)
+        .eq('id', user.id);
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      // Refresh current user data
+      const updatedProfile = await this.getOrCreateUserProfile(user);
+      this.notifyListeners(updatedProfile);
+
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
     }
-    
-    this.clearSession();
-  }
-
-  private clearSession() {
-    this.sessionToken = null;
-    this.currentUser = null;
-    localStorage.removeItem('session_token');
-    this.notifyListeners();
-  }
-
-  getCurrentUser(): User | null {
-    return this.currentUser;
-  }
-
-  getSessionToken(): string | null {
-    return this.sessionToken;
   }
 
   isAuthenticated(): boolean {
-    return this.currentUser !== null && this.sessionToken !== null;
-  }
-
-  async updateProfile(updates: Partial<User>): Promise<{ success: boolean; error?: string }> {
-    if (!this.currentUser || !this.sessionToken) {
-      return { success: false, error: 'Not authenticated' };
-    }
-
-    try {
-      const { error } = await supabase
-        .from('users')
-        .update(updates)
-        .eq('id', this.currentUser.id);
-
-      if (error) {
-        return { success: false, error: error.message };
-      }
-
-      // Update local user data
-      this.currentUser = { ...this.currentUser, ...updates };
-      this.notifyListeners();
-
-      return { success: true };
-    } catch (error) {
-      console.error('Profile update error:', error);
-      return { success: false, error: 'Profile update failed' };
-    }
+    return this.getCurrentUser() !== null;
   }
 }
 
-  async loginWithDiscord(code: string): Promise<AuthResponse> {
-    try {
-      // Exchange code for access token
-      const accessToken = await DiscordAuth.exchangeCodeForToken(code);
-      if (!accessToken) {
-        return { success: false, error: 'Failed to authenticate with Discord' };
-      }
-
-      // Get Discord user data
-      const discordUser = await DiscordAuth.getDiscordUser(accessToken);
-      if (!discordUser) {
-        return { success: false, error: 'Failed to fetch Discord user data' };
-      }
-
-      // Create or login user via Supabase function
-      const { data, error } = await supabase.rpc('create_user_from_discord', {
-        p_discord_id: discordUser.id,
-        p_discord_username: discordUser.username,
-        p_discord_email: discordUser.email,
-        p_discord_avatar_url: discordUser.avatar
-      });
-
-      if (error) {
-        return { success: false, error: error.message };
-      }
-
-      if (!data.success) {
-        return { success: false, error: data.error };
-      }
-
-      // Store session
-      this.sessionToken = data.session_token;
-      this.currentUser = data.user;
-      localStorage.setItem('session_token', this.sessionToken);
-
-      // Set session token for RLS
-      await supabase.rpc('set_config', {
-        setting_name: 'app.session_token',
-        setting_value: this.sessionToken,
-        is_local: true
-      });
-
-      this.notifyListeners();
-      return { success: true, user: data.user, session_token: data.session_token };
-    } catch (error) {
-      console.error('Discord login error:', error);
-      return { success: false, error: 'Discord authentication failed' };
-    }
-  }
-
-// Export singleton instance
 export const auth = new AuthManager();
