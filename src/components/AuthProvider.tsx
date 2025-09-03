@@ -9,6 +9,7 @@ interface AuthContextType {
   register: (email: string, password: string, username?: string, firstName?: string, lastName?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<{ success: boolean; error?: string }>;
+  loginWithDiscord: (code: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,6 +46,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return await auth.updateProfile(updates);
   };
 
+  const loginWithDiscord = async (code: string) => {
+    const result = await auth.loginWithDiscord(code);
+    return { success: result.success, error: result.error };
+  };
+
   const value: AuthContextType = {
     user,
     isLoading,
@@ -52,7 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     register,
     logout,
-    updateProfile
+    updateProfile,
+    loginWithDiscord
   };
 
   return (

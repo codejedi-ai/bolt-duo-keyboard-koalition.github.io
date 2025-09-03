@@ -1,5 +1,6 @@
 // In-house authentication system
 import { supabase } from './supabase';
+import { DiscordAuth, DiscordUser } from './discord-auth';
 
 export interface User {
   id: string;
@@ -218,6 +219,56 @@ class AuthManager {
     }
   }
 }
+
+  async loginWithDiscord(code: string): Promise<AuthResponse> {
+    try {
+      // Exchange code for access token
+      const accessToken = await DiscordAuth.exchangeCodeForToken(code);
+      if (!accessToken) {
+        return { success: false, error: 'Failed to authenticate with Discord' };
+      }
+
+      // Get Discord user data
+      const discordUser = await DiscordAuth.getDiscordUser(accessToken);
+      if (!discordUser) {
+        return { success: false, error: 'Failed to fetch Discord user data' };
+      }
+
+      // Create or login user via Supabase function
+      const { data, error } = await supabase.rpc('create_user_from_discord', {
+        p_discord_id: discordUser.id,
+        p_discord_username: discordUser.username,
+        p_discord_email: discordUser.email,
+        p_discord_avatar_url: discordUser.avatar
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      if (!data.success) {
+        return { success: false, error: data.error };
+      }
+
+      // Store session
+      this.sessionToken = data.session_token;
+      this.currentUser = data.user;
+      localStorage.setItem('session_token', this.sessionToken);
+
+      // Set session token for RLS
+      await supabase.rpc('set_config', {
+        setting_name: 'app.session_token',
+        setting_value: this.sessionToken,
+        is_local: true
+      });
+
+      this.notifyListeners();
+      return { success: true, user: data.user, session_token: data.session_token };
+    } catch (error) {
+      console.error('Discord login error:', error);
+      return { success: false, error: 'Discord authentication failed' };
+    }
+  }
 
 // Export singleton instance
 export const auth = new AuthManager();
