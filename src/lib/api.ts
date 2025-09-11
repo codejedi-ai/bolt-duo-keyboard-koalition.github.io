@@ -13,19 +13,35 @@ class ApiClient {
   private async request(endpoint: string, options: RequestInit = {}, requireAuth: boolean = true): Promise<any> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
+      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
       ...options.headers as Record<string, string>,
     };
 
     if (requireAuth) {
-      const token = await this.getAuthToken();
-      headers['Authorization'] = `Bearer ${token}`;
+      try {
+        const token = await this.getAuthToken();
+        headers['Authorization'] = `Bearer ${token}`;
+      } catch (error) {
+        console.warn('No auth token available for request to:', endpoint);
+        if (requireAuth) {
+          throw new Error('Authentication required');
+        }
+      }
     }
 
-    // Use Vite proxy to Supabase Edge Functions
-    const response = await fetch(`/api/${endpoint}`, {
+    // Use direct Supabase URL instead of proxy for now
+    const baseUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
+    const url = `${baseUrl}/${endpoint}`;
+    
+    console.log('Making request to:', url);
+
+    const response = await fetch(url, {
       ...options,
       headers,
     });
+
+    console.log('Response status:', response.status);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
       let errorMessage = `API Error: ${response.status}`;
@@ -39,7 +55,14 @@ class ApiClient {
       throw new Error(errorMessage);
     }
 
-    return response.json();
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      return response.json();
+    } else {
+      const text = await response.text();
+      console.error('Expected JSON but got:', text.substring(0, 200));
+      throw new Error('Invalid response format');
+    }
   }
 
   // User Profile API

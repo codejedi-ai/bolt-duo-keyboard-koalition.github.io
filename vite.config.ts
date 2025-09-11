@@ -14,6 +14,7 @@ export default defineConfig({
           proxy.on('proxyReq', (proxyReq, req, res) => {
             // Add the anon key header for Supabase
             proxyReq.setHeader('apikey', process.env.VITE_SUPABASE_ANON_KEY);
+            console.log('Proxying request to:', proxyReq.path);
           });
         },
       },
