@@ -1,4 +1,4 @@
-// API client for interacting with Supabase Edge Functions
+// API client for interacting with backend proxy
 import { supabase } from './supabase';
 
 class ApiClient {
@@ -12,7 +12,6 @@ class ApiClient {
 
   private async request(endpoint: string, options: RequestInit = {}, requireAuth: boolean = true): Promise<any> {
     const headers: Record<string, string> = {
-      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
       'Content-Type': 'application/json',
       ...options.headers as Record<string, string>,
     };
@@ -22,9 +21,9 @@ class ApiClient {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const token = await this.getAuthToken();
-    
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${endpoint}`, {
+    // Use backend proxy instead of direct Supabase calls
+    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    const response = await fetch(`${baseUrl}/api/${endpoint}`, {
       ...options,
       headers,
     });
