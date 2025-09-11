@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { apiClient } from '../../lib/api';
 import { Plus, Github, ExternalLink, Edit, Trash2, Code2, Trophy } from 'lucide-react';

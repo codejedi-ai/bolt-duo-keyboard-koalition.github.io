@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../components/AuthProvider';
 import { apiClient } from '../../lib/api';
 import { Card, CardContent } from "../../components/ui/card";
