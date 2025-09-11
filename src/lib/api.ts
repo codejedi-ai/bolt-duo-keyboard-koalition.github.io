@@ -1,4 +1,4 @@
-// API client for interacting with backend proxy
+// API client for interacting with Supabase Edge Functions via Vite proxy
 import { supabase } from './supabase';
 
 class ApiClient {
@@ -21,9 +21,8 @@ class ApiClient {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // Use backend proxy instead of direct Supabase calls
-    const baseUrl = import.meta.env.DEV ? 'http://localhost:3001' : '';
-    const response = await fetch(`${baseUrl}/api/${endpoint}`, {
+    // Use Vite proxy to Supabase Edge Functions
+    const response = await fetch(`/api/${endpoint}`, {
       ...options,
       headers,
     });

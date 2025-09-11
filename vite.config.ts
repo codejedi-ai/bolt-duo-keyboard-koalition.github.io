@@ -7,8 +7,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: `${process.env.VITE_SUPABASE_URL}/functions/v1`,
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        configure: (proxy, options) => {
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            // Add the anon key header for Supabase
+            proxyReq.setHeader('apikey', process.env.VITE_SUPABASE_ANON_KEY);
+          });
+        },
       },
     },
   },
